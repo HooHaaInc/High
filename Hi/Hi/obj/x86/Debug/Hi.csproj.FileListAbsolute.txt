@@ -32,3 +32,5 @@ C:\Users\Jorge\Documents\Visual Studio 2010\Projects\Hi\Hi\Hi\obj\x86\Debug\Hi.c
 C:\Users\Jorge\Documents\Visual Studio 2010\Projects\Hi\Hi\Hi\obj\x86\Debug\Microsoft.Xna.Framework.RuntimeProfile.txt
 C:\Users\Jorge\Documents\Visual Studio 2010\Projects\Hi\Hi\Hi\obj\x86\Debug\Hi.exe
 C:\Users\Jorge\Documents\Visual Studio 2010\Projects\Hi\Hi\Hi\obj\x86\Debug\Hi.pdb
+C:\Users\Jorge\Documents\Visual Studio 2010\Projects\Hi\Hi\Hi\bin\x86\Debug\Content\Maps\MAP007.MAP
+C:\Users\Jorge\Documents\Visual Studio 2010\Projects\Hi\Hi\Hi\bin\x86\Debug\Content\Maps\MAP008.MAP

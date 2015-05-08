@@ -20,6 +20,7 @@ namespace Hi
 
         private static List<Drug> drugs = new List<Drug>();
         private static List<Enemy> enemies = new List<Enemy>();
+        private static List<Platform> platforms = new List<Platform>();
         #endregion
 
         #region Properties
@@ -62,7 +63,7 @@ namespace Hi
         public static void LoadLevel(int levelNumber)
         {
             TileMap.LoadMap((System.IO.FileStream)TitleContainer.OpenStream(
-                @"Content\Maps\MAP005.MAP"));// +levelNumber.ToString().PadLeft(3, '0') + ".MAP"));
+                @"Content\Maps\MAP008.MAP"));// +levelNumber.ToString().PadLeft(3, '0') + ".MAP"));
 
             drugs.Clear();
             enemies.Clear();
@@ -86,6 +87,12 @@ namespace Hi
                     if (TileMap.CellCodeValue(x, y) == "ENEMY")
                     {
                         enemies.Add(new Enemy(Content, x, y));
+                    }
+
+                    if (TileMap.CellCodeValue(x, y) == "PLATFORM") {
+                        platforms.Add(new Platform(Content.Load<Texture2D>(@"Textures\Sprites\Gem")
+                            ,new Rectangle(x,y,50,50)
+                            ,Vector2.Zero,Vector2.Zero));
                     }
 
                 }
@@ -121,6 +128,14 @@ namespace Hi
                     }
                 }
 
+                for (int x = platforms.Count - 1; x >= 0; x--) {
+                    platforms[x].Update(gameTime);
+                    if (player.CollisionRectangle.Intersects(platforms[x].CollisionRectangle))
+                    {
+                        platforms[x].CollisionTest(player,gameTime);
+                    }
+                
+                }
                 for (int x = enemies.Count - 1; x >= 0; x--)
                 {
                     enemies[x].Update(gameTime);
@@ -161,7 +176,8 @@ namespace Hi
 
             foreach (Enemy enemy in enemies)
                 enemy.Draw(spriteBatch);
-
+            foreach (Platform platform in platforms)
+                platform.Draw(spriteBatch);
         }
 
         #endregion

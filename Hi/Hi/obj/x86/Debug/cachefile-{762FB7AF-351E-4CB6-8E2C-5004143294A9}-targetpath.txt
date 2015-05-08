@@ -23,4 +23,6 @@ Content\Textures\TitleScreen.xnb
 Content\Maps\MAP000.MAP
 Content\Maps\MAP002.MAP
 Content\Maps\MAP005.MAP
+Content\Maps\MAP007.MAP
+Content\Maps\MAP008.MAP
 Content\Maps\MAP011.MAP

@@ -79,6 +79,14 @@
       <Name>MAP005</Name>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
+    <None Include="Maps\MAP007.MAP">
+      <Name>MAP007</Name>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="Maps\MAP008.MAP">
+      <Name>MAP008</Name>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
     <None Include="Maps\MAP011.MAP">
       <Name>MAP011</Name>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>

@@ -10,7 +10,7 @@ using TileEngine;
 
 namespace Hi {
     public class Player : GameObject {
-        private Vector2 fallSpeed = new Vector2(0, 5);
+        private Vector2 fallSpeed = new Vector2(0, 15);
         private float moveScale = 180.0f;
         private Vector2 lastMove;
         private bool dead = false;
@@ -215,6 +215,9 @@ namespace Hi {
             }
         }
 
+        public void setOnGround(bool onGround) {
+            this.onGround = onGround;
+        }
         #endregion
 
 

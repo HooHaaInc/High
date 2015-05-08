@@ -13,7 +13,7 @@ namespace Hi
         #region Declarations
 
         protected Vector2 worldLocation;
-        protected Vector2 velocity;
+        public Vector2 velocity;
         protected int frameWidth;
         protected int frameHeight;
         protected bool enabled;

@@ -48,7 +48,7 @@ namespace Hi {
 
             frameWidth = 48;
             frameHeight = 48;
-            CollisionRectangle = new Rectangle(9, 1, 30, 24);
+            CollisionRectangle = new Rectangle(9, 1, 22, 30);
 
             worldLocation = new Vector2(
                 cellX * TileMap.TileWidth,

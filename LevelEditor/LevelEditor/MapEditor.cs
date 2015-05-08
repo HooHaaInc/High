@@ -105,6 +105,7 @@ namespace LevelEditor
             cboCodeValues.Items.Add("Enemy");
             cboCodeValues.Items.Add("Lethal");
             cboCodeValues.Items.Add("EnemyBlocking");
+            cboCodeValues.Items.Add("Platform");
             cboCodeValues.Items.Add("Start");
             cboCodeValues.Items.Add("Clear");
             cboCodeValues.Items.Add("Custom");
@@ -153,6 +154,9 @@ namespace LevelEditor
                     break;
                 case "Clear":
                     txtNewCode.Text = "";
+                    break;
+                case "Platform":
+                    txtNewCode.Text = "PLATFORM";
                     break;
                 case "Custom":
                     txtNewCode.Text = "";
