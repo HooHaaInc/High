@@ -9,4 +9,3 @@ C:\Users\Jorge\Documents\Visual Studio 2010\Projects\Hi\TileEngine\bin\x86\Debug
 C:\Users\Jorge\Documents\Visual Studio 2010\Projects\Hi\TileEngine\obj\x86\Debug\Microsoft.Xna.Framework.RuntimeProfile.txt
 C:\Users\Jorge\Documents\Visual Studio 2010\Projects\Hi\TileEngine\obj\x86\Debug\TileEngine.dll
 C:\Users\Jorge\Documents\Visual Studio 2010\Projects\Hi\TileEngine\obj\x86\Debug\TileEngine.pdb
-C:\Users\Jorge\Documents\Visual Studio 2010\Projects\Hi\TileEngine\obj\x86\Debug\TileEngine.csprojResolveAssemblyReference.cache

@@ -21,11 +21,12 @@ namespace Hi
         SpriteBatch spriteBatch;
         Player player;
         SpriteFont pericles8;
-        Vector2 scorePosition = new Vector2(20, 580);
-        enum GameState { TitleScreen, Playing, PlayerDead, GameOver };
+        Vector2 scorePosition = new Vector2(20, 10);
+        enum GameState { TitleScreen, Playing, PlayerDead, GameOver, Drugged };
         GameState gameState = GameState.TitleScreen;
         Vector2 gameOverPosition = new Vector2(350, 300);
-        Vector2 livesPosition = new Vector2(600, 580);
+        Vector2 livesPosition = new Vector2(20, 30);
+        Vector2 inyeccionPosition = new Vector2(20, 20);
         Texture2D titleScreen;
         float deathTimer = 0.0f;
         float deathDelay = 5.0f;
@@ -115,7 +116,7 @@ namespace Hi
                     gameState = GameState.Playing;
                 }
             }
-            if (gameState == GameState.Playing){
+            if (gameState == GameState.Playing || gameState == GameState.Drugged){
                 player.Update(gameTime);
                 LevelManager.Update(gameTime);
                 if (player.Dead){
@@ -176,19 +177,48 @@ namespace Hi
             (gameState == GameState.PlayerDead) ||
             (gameState == GameState.GameOver))
             {
-                TileMap.Draw(spriteBatch);
+                TileMap.Draw(spriteBatch,player.drugged);
                 player.Draw(spriteBatch);
                 LevelManager.Draw(spriteBatch);
                 spriteBatch.DrawString(
                 pericles8,
-                "Score: " + player.Score.ToString(),
+                "Drogas: " + player.drogas.ToString(),
                 scorePosition,
                 Color.White);
+                spriteBatch.DrawString(pericles8, "Inyecciones: " + player.inyecciones.ToString(),inyeccionPosition, Color.White);
                 spriteBatch.DrawString(
                 pericles8,
-                "Lives Remaining: " + player.LivesRemaining.ToString(),
+                "Vidas:  " + player.LivesRemaining.ToString(),
                 livesPosition,
                 Color.White);
+                spriteBatch.Draw(Content.Load<Texture2D>(@"Textures\redTexture"), 
+                    new Rectangle(600, 10, (int) (player.drugStatus * 1.8), 20),
+                    Color.White);
+                spriteBatch.Draw(Content.Load<Texture2D>(@"Textures\greenTexture"),new Rectangle(600,10,180,20),Color.White);
+                //spriteBatch.Draw(Content.Load<Texture2D>(@"Textures\redTexture"), 
+                 //   new Rectangle(600, 10, (int) (player.drugStatus * 1.8), 20),
+                 //   Color.White);
+            }
+
+            if(gameState == GameState.Drugged){
+                TileMap.Draw(spriteBatch,player.drugged);
+                player.Draw(spriteBatch);
+                LevelManager.Draw(spriteBatch);
+                spriteBatch.DrawString(
+                pericles8,
+                "Drogas: " + player.drogas.ToString(),
+                scorePosition,
+                Color.White);
+                spriteBatch.DrawString(pericles8, "Inyecciones: " + player.inyecciones.ToString(), inyeccionPosition, Color.White);
+                spriteBatch.DrawString(
+                pericles8,
+                "Vidas:  " + player.LivesRemaining.ToString(),
+                livesPosition,
+                Color.White);
+                spriteBatch.Draw(Content.Load<Texture2D>(@"Textures\redTexture"),
+                    new Rectangle(600, 10, (int)(player.drugStatus * 1.8), 20),
+                    Color.White);
+                spriteBatch.Draw(Content.Load<Texture2D>(@"Textures\greenTexture"), new Rectangle(600, 10, 180, 20), Color.White);
             }
             if (gameState == GameState.PlayerDead)
             {

@@ -101,7 +101,7 @@ namespace LevelEditor
             FixScrollBarScales();
             FixScrollBarScales();
             cboCodeValues.Items.Clear();
-            cboCodeValues.Items.Add("Gemstone");
+            cboCodeValues.Items.Add("Drug");
             cboCodeValues.Items.Add("Enemy");
             cboCodeValues.Items.Add("Lethal");
             cboCodeValues.Items.Add("EnemyBlocking");
@@ -137,8 +137,8 @@ namespace LevelEditor
             txtNewCode.Enabled = false;
             switch( cboCodeValues.Items[cboCodeValues.SelectedIndex].ToString())
             {
-                case "Gemstone" :
-                    txtNewCode.Text = "GEM";
+                case "Drug" :
+                    txtNewCode.Text = "DRUG";
                     break;
                 case "Enemy" :
                     txtNewCode.Text = "ENEMY";

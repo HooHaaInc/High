@@ -21,9 +21,13 @@ namespace TileEngine
         public const int TileWidth = 32;
         public const int TileHeight = 32;
         public const int MapWidth = 160;
+        public static float rotation = 0.0f;
         public const int MapHeight = 12;
         public const int MapLayers = 3;
         private const int skyTile = 2;
+        private static bool positiveRotation = true;
+        private static  int currentGreen = 0;
+        private static Color currentColor = Color.White;
         static private MapSquare[,] mapCells = new MapSquare[MapWidth, MapHeight];
         public static bool EditorMode = false;
         public static SpriteFont spriteFont;
@@ -164,8 +168,16 @@ namespace TileEngine
     #endregion
 
     #region Drawing
-    static public void Draw(SpriteBatch spriteBatch)
+    static public void Draw(SpriteBatch spriteBatch, bool drugged)
     {
+        if (drugged)
+        {
+            if (rotation >= 0.5f) positiveRotation = false;
+            if (rotation <= -0.5f) positiveRotation = true;
+            if (positiveRotation) rotation += 0.01f;
+            else rotation -= 0.01f;
+            currentGreen++;
+        }
         int startX = GetCellByPixelX((int)Camera.Position.X);
         int endX = GetCellByPixelX((int)Camera.Position.X + Camera.ViewPortWidth);
         int startY = GetCellByPixelY((int)Camera.Position.Y);
@@ -174,8 +186,15 @@ namespace TileEngine
             for (int y = startY; y <= endY; y++){
                 for (int z = 0; z < MapLayers; z++){
                     if ((x >= 0) && (y >= 0) && (x < MapWidth) && (y < MapHeight)){
-                        spriteBatch.Draw(tileSheet,CellScreenRectangle(x,y),TileSourceRectangle(mapCells[x,y].LayerTiles[z]),
-                        Color.White, 0.0f,Vector2.Zero, SpriteEffects.None, 1f - ((float)z * 0.1f));
+                        if (!drugged) spriteBatch.Draw(tileSheet, CellScreenRectangle(x, y), TileSourceRectangle(mapCells[x, y].LayerTiles[z]),
+                          Color.White, 0.0f, Vector2.Zero, SpriteEffects.None, 1f - ((float)z * 0.1f));
+                        else
+                        {
+                            if (currentGreen > 255) currentGreen = 0;
+                            currentColor = new Color(currentGreen, 100, 255);
+                            spriteBatch.Draw(tileSheet, CellScreenRectangle(x, y), TileSourceRectangle(mapCells[x, y].LayerTiles[z]),
+                           currentColor, rotation, Vector2.Zero, SpriteEffects.None, 1f - ((float)z * 0.1f));
+                        }
                     }
                 }      
                 if (EditorMode){

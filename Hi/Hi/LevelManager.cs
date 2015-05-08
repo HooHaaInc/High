@@ -79,7 +79,7 @@ namespace Hi
                             y * TileMap.TileHeight);
                     }
 
-                    if (TileMap.CellCodeValue(x, y) == "GEM")
+                    if (TileMap.CellCodeValue(x, y) == "DRUG")
                     {
                         drugs.Add(new Drug(Content, x, y));
                     }
@@ -90,7 +90,7 @@ namespace Hi
                     }
 
                     if (TileMap.CellCodeValue(x, y) == "PLATFORM") {
-                        platforms.Add(new Platform(Content.Load<Texture2D>(@"Textures\Sprites\Gem")
+                        platforms.Add(new Platform(Content.Load<Texture2D>(@"Textures\Sprites\ladrilloGris")
                             ,new Rectangle(x,y,50,50)
                             ,Vector2.Zero,Vector2.Zero));
                     }
@@ -124,7 +124,7 @@ namespace Hi
                         drugs[x].CollisionRectangle))
                     {
                         drugs.RemoveAt(x);
-                        player.Score += 10;
+                        player.drogas++;
                     }
                 }
 

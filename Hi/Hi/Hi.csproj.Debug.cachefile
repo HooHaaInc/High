@@ -20,8 +20,13 @@ Content\Textures\Sprites\Player\Idle.xnb
 Content\Textures\Sprites\Player\Jump.xnb
 Content\Textures\Sprites\Player\Run.xnb
 Content\Textures\TitleScreen.xnb
+Content\Textures\drug.xnb
+Content\Textures\greenTexture.xnb
+Content\Textures\redTexture.xnb
+Content\Textures\Sprites\ladrilloGris.xnb
 Content\Maps\MAP000.MAP
 Content\Maps\MAP002.MAP
 Content\Maps\MAP005.MAP
 Content\Maps\MAP007.MAP
 Content\Maps\MAP011.MAP
+Content\Maps\MAP008.MAP

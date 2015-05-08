@@ -199,6 +199,42 @@
       <Output>C:\Users\Jorge\Documents\Visual Studio 2010\Projects\Hi\Hi\Hi\bin\x86\Debug\Content\Textures\TitleScreen.xnb</Output>
       <Time>2015-03-09T22:35:09.508621-07:00</Time>
     </Item>
+    <Item>
+      <Source>Textures\drug.png</Source>
+      <Name>Textures\drug</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+      <Options>None</Options>
+      <Output>C:\Users\Jorge\Documents\Visual Studio 2010\Projects\Hi\Hi\Hi\bin\x86\Debug\Content\Textures\drug.xnb</Output>
+      <Time>2015-05-07T21:23:42.6933582-07:00</Time>
+    </Item>
+    <Item>
+      <Source>Textures\greenTexture.png</Source>
+      <Name>Textures\greenTexture</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+      <Options>None</Options>
+      <Output>C:\Users\Jorge\Documents\Visual Studio 2010\Projects\Hi\Hi\Hi\bin\x86\Debug\Content\Textures\greenTexture.xnb</Output>
+      <Time>2015-05-07T21:53:34.277831-07:00</Time>
+    </Item>
+    <Item>
+      <Source>Textures\redTexture.png</Source>
+      <Name>Textures\redTexture</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+      <Options>None</Options>
+      <Output>C:\Users\Jorge\Documents\Visual Studio 2010\Projects\Hi\Hi\Hi\bin\x86\Debug\Content\Textures\redTexture.xnb</Output>
+      <Time>2015-05-07T21:53:34.2818312-07:00</Time>
+    </Item>
+    <Item>
+      <Source>Textures\Sprites\ladrilloGris.png</Source>
+      <Name>Textures\Sprites\ladrilloGris</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+      <Options>None</Options>
+      <Output>C:\Users\Jorge\Documents\Visual Studio 2010\Projects\Hi\Hi\Hi\bin\x86\Debug\Content\Textures\Sprites\ladrilloGris.xnb</Output>
+      <Time>2015-05-07T22:05:25.4085054-07:00</Time>
+    </Item>
     <BuildSuccessful>true</BuildSuccessful>
     <Settings>
       <TargetPlatform>Windows</TargetPlatform>

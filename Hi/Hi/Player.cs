@@ -14,8 +14,13 @@ namespace Hi {
         private float moveScale = 180.0f;
         private Vector2 lastMove;
         private bool dead = false;
+        public int drogas = 0;
+        public bool drugged = false;
         private int score = 0;
         private int livesRemaining = 3;
+        public int inyecciones = 3;
+        public int drugStatus = 0;
+        KeyboardState lastState;
 
         public bool Dead {
             get { return dead; }
@@ -86,7 +91,8 @@ namespace Hi {
                 velocity = new Vector2(0, velocity.Y);
                 GamePadState gamePad = GamePad.GetState(PlayerIndex.One);
                 KeyboardState keyState = Keyboard.GetState();
-
+                if (keyState.IsKeyDown(Keys.Q) && lastState.IsKeyUp(Keys.Q)) Clean();
+                if (keyState.IsKeyDown(Keys.E) && lastState.IsKeyUp(Keys.E)) Drug();
                 if (keyState.IsKeyDown(Keys.Left) ||
                     (gamePad.ThumbSticks.Left.X < -0.3f)) {
                     flipped = false;
@@ -122,6 +128,7 @@ namespace Hi {
                 if (newAnimation != currentAnimation) {
                     PlayAnimation(newAnimation);
                 }
+                lastState = keyState;
             }
 
             velocity += fallSpeed;
@@ -162,6 +169,17 @@ namespace Hi {
             lastMove = moveAmount;
         }
 
+
+
+        public void Clean() {
+            if(inyecciones > 0) inyecciones--;
+            drugStatus -= 30;
+            if (drugStatus < 0)
+            {
+                drugged = false;
+                drugStatus = 0;
+            }
+        }
         public void Jump() {
             velocity.Y = -400;
             animations["jump"].signalIndex = 0;
@@ -175,6 +193,14 @@ namespace Hi {
             dead = true;
         }
 
+        public void Drug() {
+            drugged = true;
+            if(drogas > 0) drogas--;
+            Random random = new Random();
+            int percentage = random.Next(20,40);
+            drugStatus += percentage;
+            if (drugStatus > 100) drugStatus = 100;
+        }
         public void Revive()
         {
             PlayAnimation("idle");

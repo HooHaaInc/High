@@ -155,7 +155,7 @@ namespace LevelEditor
         {
             GraphicsDevice.Clear(Color.Black);
             spriteBatch.Begin(SpriteSortMode.BackToFront,BlendState.AlphaBlend);
-            TileMap.Draw(spriteBatch);
+            TileMap.Draw(spriteBatch,false);
             spriteBatch.End();
             base.Draw(gameTime);
         }
