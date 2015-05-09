@@ -1,15 +1,9 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 11.00
 # Visual Studio 2010
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Hi", "Hi\Hi\Hi.csproj", "{F167446C-D74A-4D3F-B5AB-376B1FE96C9C}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Hi", "Hi\Hi\Hi.csproj", "{6D5BBC30-205D-4CBB-BEE3-BBC26433A127}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HiContent", "Hi\HiContent\HiContent.contentproj", "{762FB7AF-351E-4CB6-8E2C-5004143294A9}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TileEngine", "TileEngine\TileEngine.csproj", "{C602C56A-F7AD-414F-8F88-19CC72101C0A}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LevelEditor", "LevelEditor\LevelEditor\LevelEditor.csproj", "{4299AB43-681C-4F22-AD2C-87556CECB456}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LevelEditorContent", "LevelEditor\LevelEditorContent\LevelEditorContent.contentproj", "{DF83E312-B36E-4942-A7F6-4FDC5149B73C}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TileEngine", "TileEngine\TileEngine.csproj", "{DFAB2594-7140-44F9-A9B3-F9AF18D5A8DE}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -17,23 +11,17 @@ Global
 		Release|x86 = Release|x86
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{F167446C-D74A-4D3F-B5AB-376B1FE96C9C}.Debug|x86.ActiveCfg = Debug|x86
-		{F167446C-D74A-4D3F-B5AB-376B1FE96C9C}.Debug|x86.Build.0 = Debug|x86
-		{F167446C-D74A-4D3F-B5AB-376B1FE96C9C}.Release|x86.ActiveCfg = Release|x86
-		{F167446C-D74A-4D3F-B5AB-376B1FE96C9C}.Release|x86.Build.0 = Release|x86
-		{762FB7AF-351E-4CB6-8E2C-5004143294A9}.Debug|x86.ActiveCfg = Debug|x86
-		{762FB7AF-351E-4CB6-8E2C-5004143294A9}.Release|x86.ActiveCfg = Release|x86
-		{762FB7AF-351E-4CB6-8E2C-5004143294A9}.Release|x86.Build.0 = Release|x86
-		{C602C56A-F7AD-414F-8F88-19CC72101C0A}.Debug|x86.ActiveCfg = Debug|x86
-		{C602C56A-F7AD-414F-8F88-19CC72101C0A}.Debug|x86.Build.0 = Debug|x86
-		{C602C56A-F7AD-414F-8F88-19CC72101C0A}.Release|x86.ActiveCfg = Release|x86
-		{C602C56A-F7AD-414F-8F88-19CC72101C0A}.Release|x86.Build.0 = Release|x86
-		{4299AB43-681C-4F22-AD2C-87556CECB456}.Debug|x86.ActiveCfg = Debug|x86
-		{4299AB43-681C-4F22-AD2C-87556CECB456}.Debug|x86.Build.0 = Debug|x86
-		{4299AB43-681C-4F22-AD2C-87556CECB456}.Release|x86.ActiveCfg = Release|x86
-		{4299AB43-681C-4F22-AD2C-87556CECB456}.Release|x86.Build.0 = Release|x86
-		{DF83E312-B36E-4942-A7F6-4FDC5149B73C}.Debug|x86.ActiveCfg = Debug|x86
-		{DF83E312-B36E-4942-A7F6-4FDC5149B73C}.Release|x86.ActiveCfg = Release|x86
+		{6D5BBC30-205D-4CBB-BEE3-BBC26433A127}.Debug|x86.ActiveCfg = Debug|x86
+		{6D5BBC30-205D-4CBB-BEE3-BBC26433A127}.Debug|x86.Build.0 = Debug|x86
+		{6D5BBC30-205D-4CBB-BEE3-BBC26433A127}.Release|x86.ActiveCfg = Release|x86
+		{6D5BBC30-205D-4CBB-BEE3-BBC26433A127}.Release|x86.Build.0 = Release|x86
+		{DFAB2594-7140-44F9-A9B3-F9AF18D5A8DE}.Debug|x86.ActiveCfg = Debug|x86
+		{DFAB2594-7140-44F9-A9B3-F9AF18D5A8DE}.Debug|x86.Build.0 = Debug|x86
+		{DFAB2594-7140-44F9-A9B3-F9AF18D5A8DE}.Release|x86.ActiveCfg = Release|x86
+		{DFAB2594-7140-44F9-A9B3-F9AF18D5A8DE}.Release|x86.Build.0 = Release|x86
+	EndGlobalSection
+	GlobalSection(MonoDevelopProperties) = preSolution
+		StartupItem = Hi\Hi\Hi.csproj
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

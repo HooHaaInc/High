@@ -61,8 +61,12 @@ namespace Hi
 
             spriteBatch = new SpriteBatch(GraphicsDevice);
             TileMap.Initialize(Content.Load<Texture2D>(@"Textures\PlatformTiles"));
-            TileMap.spriteFont = Content.Load<SpriteFont>(@"Fonts\Pericles8");
-            pericles8 = Content.Load<SpriteFont>(@"Fonts\Pericles8");
+			try{
+	            TileMap.spriteFont = Content.Load<SpriteFont>(@"Fonts\Pericles8");
+	            pericles8 = Content.Load<SpriteFont>(@"Fonts\Pericles8");
+			}catch{
+
+			}
             titleScreen = Content.Load<Texture2D>(@"Textures\TitleScreen");
             Camera.WorldRectangle = new Rectangle(0, 0, 160 * TileMap.TileHeight, 12 *
             TileMap.TileWidth);
@@ -180,20 +184,22 @@ namespace Hi
                 TileMap.Draw(spriteBatch,player.drugged);
                 player.Draw(spriteBatch);
                 LevelManager.Draw(spriteBatch);
-                spriteBatch.DrawString(
-                pericles8,
-                "Drogas: " + player.drogas.ToString(),
-                scorePosition,
-                Color.White);
+				try{
+	                spriteBatch.DrawString(
+	                pericles8,
+	                "Drogas: " + player.drogas.ToString(),
+	                scorePosition,
+	                Color.White);
 
-                //spriteBatch.DrawString(pericles8, "Current green" + TileMap.currentGreen.ToString(), new Vector2(20, 70), Color.White);
-                //spriteBatch.DrawString(pericles8, "Color: " + TileMap.currentColor.ToString(), new Vector2(20, 50), Color.White);
-                spriteBatch.DrawString(pericles8, "Inyecciones: " + player.inyecciones.ToString(),inyeccionPosition, Color.White);
-                spriteBatch.DrawString(
-                pericles8,
-                "Vidas:  " + player.LivesRemaining.ToString(),
-                livesPosition,
-                Color.White);
+	                //spriteBatch.DrawString(pericles8, "Current green" + TileMap.currentGreen.ToString(), new Vector2(20, 70), Color.White);
+	                //spriteBatch.DrawString(pericles8, "Color: " + TileMap.currentColor.ToString(), new Vector2(20, 50), Color.White);
+	                spriteBatch.DrawString(pericles8, "Inyecciones: " + player.inyecciones.ToString(),inyeccionPosition, Color.White);
+	                spriteBatch.DrawString(
+	                pericles8,
+	                "Vidas:  " + player.LivesRemaining.ToString(),
+	                livesPosition,
+	                Color.White);
+				}catch{}
                 spriteBatch.Draw(Content.Load<Texture2D>(@"Textures\redTexture"), 
                     new Rectangle(600, 10, (int) (player.drugStatus * 1.8), 20),
                     Color.White);
@@ -207,17 +213,19 @@ namespace Hi
                 TileMap.Draw(spriteBatch,player.drugged);
                 player.Draw(spriteBatch);
                 LevelManager.Draw(spriteBatch);
-                spriteBatch.DrawString(
-                pericles8,
-                "Drogas: " + player.drogas.ToString(),
-                scorePosition,
-                Color.White);
-                spriteBatch.DrawString(pericles8, "Inyecciones: " + player.inyecciones.ToString(), inyeccionPosition, Color.White);
-                spriteBatch.DrawString(
-                pericles8,
-                "Vidas:  " + player.LivesRemaining.ToString(),
-                livesPosition,
-                Color.White);
+                try{
+					spriteBatch.DrawString(
+	                pericles8,
+	                "Drogas: " + player.drogas.ToString(),
+	                scorePosition,
+	                Color.White);
+	                spriteBatch.DrawString(pericles8, "Inyecciones: " + player.inyecciones.ToString(), inyeccionPosition, Color.White);
+	                spriteBatch.DrawString(
+	                pericles8,
+	                "Vidas:  " + player.LivesRemaining.ToString(),
+	                livesPosition,
+	                Color.White);
+				}catch{}
                 spriteBatch.Draw(Content.Load<Texture2D>(@"Textures\redTexture"),
                     new Rectangle(600, 10, (int)(player.drugStatus * 1.8), 20),
                     Color.White);
@@ -228,11 +236,13 @@ namespace Hi
             }
             if (gameState == GameState.GameOver)
             {
-                spriteBatch.DrawString(
-                pericles8,
-                "G A M E O V E R !",
-                gameOverPosition,
-                Color.White);
+				try{
+	                spriteBatch.DrawString(
+	                pericles8,
+	                "G A M E O V E R !",
+	                gameOverPosition,
+	                Color.White);
+				}catch{}
             }
             spriteBatch.End();
             base.Draw(gameTime);
