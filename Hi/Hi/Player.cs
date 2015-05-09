@@ -69,7 +69,7 @@ namespace Hi {
                     48,
                     "die"));
             animations["die"].LoopAnimation = false;
-            animations["die"].setSignal(7);
+            animations["die"].setSignal(15);
 
             frameWidth = 48;
             frameHeight = 48;
@@ -92,7 +92,6 @@ namespace Hi {
                 GamePadState gamePad = GamePad.GetState(PlayerIndex.One);
                 KeyboardState keyState = Keyboard.GetState();
                 if (keyState.IsKeyDown(Keys.Q) && lastState.IsKeyUp(Keys.Q)) Clean();
-                if (keyState.IsKeyDown(Keys.E) && lastState.IsKeyUp(Keys.E)) Drug();
                 if (keyState.IsKeyDown(Keys.Left) ||
                     (gamePad.ThumbSticks.Left.X < -0.3f)) {
                     flipped = false;
@@ -123,6 +122,17 @@ namespace Hi {
 
                 if (currentAnimation == "jump"){
                     newAnimation = "jump";
+                }
+
+                if (currentAnimation == "die")
+                {
+                    newAnimation = "die";
+                }
+
+                if (keyState.IsKeyDown(Keys.E) && lastState.IsKeyUp(Keys.E))
+                {
+                    Drug();
+                    if (dead) newAnimation = "die";
                 }
 
                 if (newAnimation != currentAnimation) {
@@ -172,12 +182,15 @@ namespace Hi {
 
 
         public void Clean() {
-            if(inyecciones > 0) inyecciones--;
-            drugStatus -= 30;
-            if (drugStatus < 0)
+            if (inyecciones > 0)
             {
-                drugged = false;
-                drugStatus = 0;
+                inyecciones--;
+                drugStatus -= 30;
+                if (drugStatus < 0)
+                {
+                    drugged = false;
+                    drugStatus = 0;
+                }
             }
         }
         public void Jump() {
@@ -194,12 +207,16 @@ namespace Hi {
         }
 
         public void Drug() {
-            drugged = true;
-            if(drogas > 0) drogas--;
-            Random random = new Random();
-            int percentage = random.Next(20,40);
-            drugStatus += percentage;
-            if (drugStatus > 100) drugStatus = 100;
+            if (drogas > 0)
+            {
+                drugged = true;
+                drogas--;
+                Random random = new Random();
+                int percentage = 40;// random.Next(40, 40);
+                drugStatus += percentage;
+                if (drugStatus > 100) Kill();
+               // drugStatus = 0;
+            }
         }
         public void Revive()
         {

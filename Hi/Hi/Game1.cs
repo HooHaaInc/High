@@ -185,6 +185,9 @@ namespace Hi
                 "Drogas: " + player.drogas.ToString(),
                 scorePosition,
                 Color.White);
+
+                //spriteBatch.DrawString(pericles8, "Current green" + TileMap.currentGreen.ToString(), new Vector2(20, 70), Color.White);
+                //spriteBatch.DrawString(pericles8, "Color: " + TileMap.currentColor.ToString(), new Vector2(20, 50), Color.White);
                 spriteBatch.DrawString(pericles8, "Inyecciones: " + player.inyecciones.ToString(),inyeccionPosition, Color.White);
                 spriteBatch.DrawString(
                 pericles8,

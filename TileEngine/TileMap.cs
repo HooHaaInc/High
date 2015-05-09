@@ -25,9 +25,10 @@ namespace TileEngine
         public const int MapHeight = 12;
         public const int MapLayers = 3;
         private const int skyTile = 2;
+        public static double frequency = 0.05f;
         private static bool positiveRotation = true;
-        private static  int currentGreen = 0;
-        private static Color currentColor = Color.White;
+        public static  int currentGreen = 0;                // Change me to private
+        public static Color currentColor = Color.White;     // Change me to private
         static private MapSquare[,] mapCells = new MapSquare[MapWidth, MapHeight];
         public static bool EditorMode = false;
         public static SpriteFont spriteFont;
@@ -191,7 +192,21 @@ namespace TileEngine
                         else
                         {
                             if (currentGreen > 255) currentGreen = 0;
-                            currentColor = new Color(currentGreen, 100, 255);
+
+                            /*currentColor = new Color(   (float)(Math.Sin(2.0f * Math.PI * ((float)currentGreen) / 255.0f - 1.0f) + 1.0f) * 127.0f,
+                                                        (float)(Math.Sin(2.0f * Math.PI * currentGreen / 255.0f - 1.0f) + 1.0f) * 127.0f,
+                                                        (float)(Math.Sin(2.0f * Math.PI * currentGreen / 255.0f - 1.0f) + 1.0f) * 127.0f);
+                             */
+                            
+                            currentColor = new Color(
+                                //((int) ( (Math.Sin( currentGreen  * frequency + 0) * 127 )+ 128)),
+                                //((int) ( ( Math.Sin(currentGreen * frequency + 2) * 127 ) + 128)),
+                                //((int) ( ( Math.Sin(currentGreen * frequency + 4) * 127 ) + 128))
+                                (float)(Math.Sin(currentGreen*frequency + 0)),
+                                (float)(Math.Sin(currentGreen*frequency + 2)),
+                                (float)(Math.Sin(currentGreen*frequency + 4))
+                                );
+                            //currentColor = new Color(100, 255, currentGreen);
                             spriteBatch.Draw(tileSheet, CellScreenRectangle(x, y), TileSourceRectangle(mapCells[x, y].LayerTiles[z]),
                            currentColor, rotation, Vector2.Zero, SpriteEffects.None, 1f - ((float)z * 0.1f));
                         }
