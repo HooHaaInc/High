@@ -10,19 +10,21 @@ namespace Hi
 {
 	public class Platform : GameObject
 	{
-		private static int UP_DANGER = 1;
-		private static int DOWN_DANGER = 2;
-		private static int LEFT_DANGER = 4;
-		private static int RIGHT_DANGER = 8;
+		public static int UP_DANGER = 1;
+		public static int DOWN_DANGER = 2;
+		public static int LEFT_DANGER = 4;
+		public static int RIGHT_DANGER = 8;
 
 		#region Declarations
 		List<GameObject> aboveThings = new List<GameObject>();
 		int danger;
-		Vector2 limit;
+		int limit;
+		float elapsed = 0;
+		Vector2 hk;
 		#endregion
 
 		#region Constructor
-		public Platform (Texture2D texture, Rectangle rect, Vector2 movement, Vector2 limits, int danger = 0)
+		public Platform (Texture2D texture, Rectangle rect, Vector2 movement, int limits, int danger = 0)
 		{
 
 			animations.Add ("plat", new AnimationStrip (texture, rect.Width, "plat"));
@@ -39,10 +41,11 @@ namespace Hi
 			PlayAnimation ("plat");
             enabled = true;
 			worldLocation = new Vector2 (TileMap.TileWidth * rect.X, TileMap.TileHeight * rect.Y);
+			hk = new Vector2 (TileMap.TileWidth * rect.X, TileMap.TileHeight * rect.Y);
 		}
 
-		public Platform(ContentManager content, int type){
-            danger = 1;
+		public Platform(ContentManager content, int x, int y, int type){
+			worldLocation = new Vector2 (TileMap.TileWidth * x, TileMap.TileHeight * y);
 			//switch(type){
 				///cases
 			//}
@@ -54,46 +57,38 @@ namespace Hi
 		{
 			if (!enabled)
 				return;
-			float elapsed = (float)gameTime.ElapsedGameTime.TotalSeconds;
+			float time = (float)gameTime.ElapsedGameTime.TotalSeconds;
+			elapsed += time;
             updateAnimation(gameTime);
 			if (velocity.Y == 0 && velocity.X == 0)
 				return;
-			Vector2 moveAmount = (limit.Y - limit.X)/2*(new Vector2((float)Math.Sin (velocity.X*elapsed), (float)Math.Sin (velocity.Y*elapsed)));
-			Vector2 newPosition = worldLocation + moveAmount;
-			for (int i=0; i<aboveThings.Count; ++i)
-				aboveThings [i].WorldLocation += moveAmount;
+			Vector2 newPosition = hk + limit*(new Vector2 ((float)Math.Sin (velocity.X*elapsed), (float)Math.Sin (velocity.Y*elapsed)));
 			newPosition = new Vector2 (
 				MathHelper.Clamp (newPosition.X, 0, Camera.WorldRectangle.Width - frameWidth),
 				MathHelper.Clamp (newPosition.Y, 2 * (-TileMap.TileHeight), Camera.WorldRectangle.Height - frameHeight));
+			Vector2 moveAmount = newPosition - worldLocation;
+			for (int i=aboveThings.Count-1; i>=0; --i) {
+				//Console.Write (moveAmount);
+				aboveThings [i].AutoMove = moveAmount;
+				aboveThings.RemoveAt (i);
+			}
 			worldLocation = newPosition;
-            base.Update(gameTime);
+            //base.Update(gameTime);
 
 		}
 
-		public void CollisionTest(Player player, GameTime gameTime){
-			if (aboveThings.Contains (player)) return;
-			aboveThings.Add (player);
-			float elapsed = (float)gameTime.ElapsedGameTime.TotalSeconds;
-			Vector2 before = player.WorldLocation - player.velocity * elapsed;
-			if (before.Y + player.CollisionRectangle.Height < WorldLocation.Y)
-				player.WorldLocation = new Vector2 (
-					player.WorldLocation.X,
-					WorldLocation.Y - player.CollisionRectangle.Height);
-			else if (before.X < WorldLocation.X)
-				player.WorldLocation = new Vector2 (
-					WorldLocation.X - player.CollisionRectangle.Width,
-					player.WorldLocation.Y);
-			else if (before.X > worldLocation.X)
-				player.WorldLocation = new Vector2 (
-					WorldLocation.X + CollisionRectangle.Width,
-					player.WorldLocation.Y);
-			else
-				player.WorldLocation = new Vector2 (
-					player.WorldLocation.X,
-					WorldLocation.Y + CollisionRectangle.Height);
+		public bool ContainsPixel(Vector2 coord){
+			return worldLocation.Y <= coord.Y && 
+				worldLocation.Y + collisionRectangle.Height >= coord.Y &&
+				worldLocation.X <= coord.X &&
+				worldLocation.X + collisionRectangle.Width >= coord.X;
+		}
 
-            player.setOnGround(true);
-			
+		public void addAbove(GameObject go){
+			for (int i=0; i<aboveThings.Count; ++i)
+				if (aboveThings [i] == go)
+					return;
+			aboveThings.Add (go);
 		}
 		#endregion
 	}
