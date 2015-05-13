@@ -26,6 +26,7 @@ namespace Hi
         protected float drawDepth = 0.85f;
         protected Dictionary<string, AnimationStrip> animations = new Dictionary<string, AnimationStrip>();
         protected string currentAnimation;
+		protected Vector2 autoMove;
 
         #endregion
 
@@ -57,6 +58,12 @@ namespace Hi
             }
             set { collisionRectangle = value; }
         }
+
+		public Vector2 AutoMove{
+			get{ return autoMove; }
+			set{ autoMove = value; }
+		}
+
         #endregion
 
         #region Helper Methods
@@ -87,7 +94,8 @@ namespace Hi
             updateAnimation(gameTime);
             if (velocity.Y != 0) onGround = false;
 
-            Vector2 moveAmount = velocity * elapsed;
+            Vector2 moveAmount = velocity * elapsed + autoMove;
+
             moveAmount = horizontalCollisionTest(moveAmount);
             moveAmount = verticalCollisionTest(moveAmount);
             Vector2 newPosition = worldLocation + moveAmount;
@@ -126,12 +134,14 @@ namespace Hi
             }
             Vector2 mapCell1 = TileMap.GetCellByPixel(corner1);
             Vector2 mapCell2 = TileMap.GetCellByPixel(corner2);
-            if (!TileMap.CellIsPassable(mapCell1) || !TileMap.CellIsPassable(mapCell2))
+			Platform platform1 = LevelManager.PlatformAt (corner1);
+			Platform platform2 = LevelManager.PlatformAt (corner2);
+            if (!TileMap.CellIsPassable(mapCell1) || !TileMap.CellIsPassable(mapCell2) || platform1 != null || platform2 != null)
             {
                 moveAmount.X = 0;
                 velocity.X = 0;
             }
-            if (codeBasedBlocks)
+            else if (codeBasedBlocks)
             {
                 if (TileMap.CellCodeValue(mapCell1) == "BLOCK" || TileMap.CellCodeValue(mapCell2) == "BLOCK")
                 {
@@ -139,6 +149,13 @@ namespace Hi
                     velocity.X = 0;
                 }
             }
+
+			if (platform1 != null) {
+				platform1.addAbove (this);
+			} else if (platform2 != null)
+				platform2.addAbove (this);
+
+
             return moveAmount;
         }
 
@@ -160,13 +177,15 @@ namespace Hi
             }
             Vector2 mapCell1 = TileMap.GetCellByPixel(corner1);
             Vector2 mapCell2 = TileMap.GetCellByPixel(corner2);
-            if (!TileMap.CellIsPassable(mapCell1) || !TileMap.CellIsPassable(mapCell2))
+			Platform platform1 = LevelManager.PlatformAt (corner1);
+			Platform platform2 = LevelManager.PlatformAt (corner2);
+            if (!TileMap.CellIsPassable(mapCell1) || !TileMap.CellIsPassable(mapCell2) || platform1 != null || platform2 != null)
             {
                 if (moveAmount.Y > 0) onGround = true;
                 moveAmount.Y = 0;
                 velocity.Y = 0;
             }
-            if (codeBasedBlocks)
+            else if (codeBasedBlocks)
             {
                 if (TileMap.CellCodeValue(mapCell1) == "BLOCK" || TileMap.CellCodeValue(mapCell2) == "BLOCK")
                 {
@@ -175,8 +194,16 @@ namespace Hi
                     velocity.Y = 0;
                 }
             }
+
+			if (platform1 != null) {
+				platform1.addAbove (this);
+			} else if (platform2 != null)
+				platform2.addAbove (this);
+
             return moveAmount;
         }
+
+
         #endregion
     }
             

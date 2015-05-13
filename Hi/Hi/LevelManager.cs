@@ -63,10 +63,11 @@ namespace Hi
         public static void LoadLevel(int levelNumber)
         {
             TileMap.LoadMap((System.IO.FileStream)TitleContainer.OpenStream(
-                @"Content\Maps\MAP008.MAP"));// +levelNumber.ToString().PadLeft(3, '0') + ".MAP"));
+                @"HiContent/Maps/MAP008.MAP"));// +levelNumber.ToString().PadLeft(3, '0') + ".MAP"));
 
             drugs.Clear();
             enemies.Clear();
+			platforms.Clear ();
 
             for (int x = 0; x < TileMap.MapWidth; x++)
             {
@@ -91,8 +92,8 @@ namespace Hi
 
                     if (TileMap.CellCodeValue(x, y) == "PLATFORM") {
                         platforms.Add(new Platform(Content.Load<Texture2D>(@"Textures\Sprites\ladrilloGris")
-                            ,new Rectangle(x,y,50,50)
-                            ,Vector2.Zero,Vector2.Zero));
+                            ,new Rectangle(x,y,64,32)
+                            ,new Vector2(3, 0), 64));
                     }
 
                 }
@@ -117,6 +118,9 @@ namespace Hi
             {
                 checkCurrentCellCode(); 
 
+				for (int i=0; i<platforms.Count (); ++i)
+					platforms [i].Update (gameTime);
+
                 for (int x = drugs.Count - 1; x >= 0; x--)
                 {
                     drugs[x].Update(gameTime);
@@ -128,14 +132,6 @@ namespace Hi
                     }
                 }
 
-                for (int x = platforms.Count - 1; x >= 0; x--) {
-                    platforms[x].Update(gameTime);
-                    if (player.CollisionRectangle.Intersects(platforms[x].CollisionRectangle))
-                    {
-                        platforms[x].CollisionTest(player,gameTime);
-                    }
-                
-                }
                 for (int x = enemies.Count - 1; x >= 0; x--)
                 {
                     enemies[x].Update(gameTime);
@@ -179,6 +175,14 @@ namespace Hi
             foreach (Platform platform in platforms)
                 platform.Draw(spriteBatch);
         }
+
+		public static Platform PlatformAt(Vector2 cord){
+			for(int i=0; i<platforms.Count (); ++i){
+				if (platforms [i].ContainsPixel (cord))
+					return platforms [i];
+			}
+			return null;
+		}
 
         #endregion
 

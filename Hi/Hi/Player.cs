@@ -144,13 +144,14 @@ namespace Hi {
             velocity += fallSpeed;
 
             repositionCamera();
-           // base.Update(gameTime);
+            //base.Update(gameTime);
 
             if (!enabled) return;
             float elapsed = (float)gameTime.ElapsedGameTime.TotalSeconds;
             updateAnimation(gameTime);
             if (velocity.Y != 0) onGround = false;
-            Vector2 moveAmount = velocity * elapsed;
+            Vector2 moveAmount = velocity * elapsed + AutoMove;
+			AutoMove = Vector2.Zero;
             moveAmount = horizontalCollisionTest(moveAmount);
             moveAmount = verticalCollisionTest(moveAmount);
             if (!onGround)
