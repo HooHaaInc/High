@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using Microsoft.Xna.Framework.Content;
 using TileEngine;
 
 namespace Hi
@@ -18,7 +19,7 @@ namespace Hi
         protected int frameHeight;
         protected bool enabled;
         protected bool flipped = false;
-        protected bool onGround;
+        public bool onGround;
         protected Rectangle collisionRectangle;
         protected int collideWidth;
         protected int collideHeight;
@@ -27,6 +28,7 @@ namespace Hi
         protected Dictionary<string, AnimationStrip> animations = new Dictionary<string, AnimationStrip>();
         protected string currentAnimation;
 		protected Vector2 autoMove;
+		protected Texture2D rekt = null;
 
         #endregion
 
@@ -78,6 +80,13 @@ namespace Hi
         #endregion
 
         #region Public Methods
+		protected GameObject(){
+		}
+
+		protected GameObject(ContentManager content){
+			rekt = content.Load <Texture2D> (@"rect");
+		}
+
         public void PlayAnimation(string name)
         {
             if (!(name == null) && animations.ContainsKey(name))
@@ -113,6 +122,13 @@ namespace Hi
                 spriteBatch.Draw(animations[currentAnimation].Texture,Camera.WorldToScreen(WorldRectangle),
                 animations[currentAnimation].FrameRectangle,Color.White, 0.0f, Vector2.Zero, effect, drawDepth);
             }
+
+			//Debug c:
+			if(rekt != null)
+			spriteBatch.Draw (
+				rekt,
+				Camera.WorldToScreen (CollisionRectangle),
+				Color.Green);
         }
         #endregion
         #region Map-Based Collision Detection Methods
@@ -134,9 +150,9 @@ namespace Hi
             }
             Vector2 mapCell1 = TileMap.GetCellByPixel(corner1);
             Vector2 mapCell2 = TileMap.GetCellByPixel(corner2);
-			Platform platform1 = LevelManager.PlatformAt (corner1);
-			Platform platform2 = LevelManager.PlatformAt (corner2);
-            if (!TileMap.CellIsPassable(mapCell1) || !TileMap.CellIsPassable(mapCell2) || platform1 != null || platform2 != null)
+			//Platform platform1 = LevelManager.PlatformAt (corner1);
+			//Platform platform2 = LevelManager.PlatformAt (corner2);
+            if (!TileMap.CellIsPassable(mapCell1) || !TileMap.CellIsPassable(mapCell2) )//|| platform1 != null || platform2 != null)
             {
                 moveAmount.X = 0;
                 velocity.X = 0;
@@ -150,11 +166,11 @@ namespace Hi
                 }
             }
 
-			if (platform1 != null) {
+			/*if (platform1 != null) {
 				platform1.addAbove (this);
 			} else if (platform2 != null)
 				platform2.addAbove (this);
-
+*/
 
             return moveAmount;
         }
@@ -179,7 +195,23 @@ namespace Hi
             Vector2 mapCell2 = TileMap.GetCellByPixel(corner2);
 			Platform platform1 = LevelManager.PlatformAt (corner1);
 			Platform platform2 = LevelManager.PlatformAt (corner2);
-            if (!TileMap.CellIsPassable(mapCell1) || !TileMap.CellIsPassable(mapCell2) || platform1 != null || platform2 != null)
+
+			if (moveAmount.Y > 0) {
+				if (platform1 != null) {
+					platform1.addAbove (this);
+					onGround = true;
+					velocity.Y = 0;
+					moveAmount.Y = 0;
+				} else if (platform2 != null) {
+					platform2.addAbove (this);
+					onGround = true;
+					velocity.Y = 0;
+					moveAmount.Y = 0;
+				}
+				if(autoMove.Y != 0) moveAmount.Y = autoMove.Y;
+			}
+
+            if (!TileMap.CellIsPassable(mapCell1) || !TileMap.CellIsPassable(mapCell2) )//|| platform1 != null || platform2 != null)
             {
                 if (moveAmount.Y > 0) onGround = true;
                 moveAmount.Y = 0;
@@ -194,12 +226,6 @@ namespace Hi
                     velocity.Y = 0;
                 }
             }
-
-			if (platform1 != null) {
-				platform1.addAbove (this);
-			} else if (platform2 != null)
-				platform2.addAbove (this);
-
             return moveAmount;
         }
 

@@ -46,9 +46,25 @@ namespace Hi
 
 		public Platform(ContentManager content, int x, int y, int type){
 			worldLocation = new Vector2 (TileMap.TileWidth * x, TileMap.TileHeight * y);
-			//switch(type){
-				///cases
-			//}
+			switch(type){
+				default:
+				animations.Add ("plat", new AnimationStrip(
+					content.Load<Texture2D>(@"Textures\Sprites\ladrilloGris"), 64, "plat"));
+				animations["plat"].LoopAnimation = true;
+				animations["plat"].FrameLength = 0.15f;
+				animations["plat"].setSignal(20);
+				drawDepth = 0.875f;
+				collisionRectangle = new Rectangle(0, 0, 64, 12);
+				velocity = new Vector2(3, 0);
+				limit = 64;
+				this.danger = 0;
+				frameWidth = 64;
+				frameHeight = 12;
+				PlayAnimation ("plat");
+				enabled = true;
+				hk = new Vector2 (TileMap.TileWidth * x, TileMap.TileHeight * y);
+				break;
+			}
 		}
 		#endregion
 
@@ -69,7 +85,10 @@ namespace Hi
 			Vector2 moveAmount = newPosition - worldLocation;
 			for (int i=aboveThings.Count-1; i>=0; --i) {
 				//Console.Write (moveAmount);
-				aboveThings [i].AutoMove = moveAmount;
+				if (aboveThings [i].CollisionRectangle.Intersects (CollisionRectangle) && velocity.Y == 0)
+					aboveThings [i].AutoMove = new Vector2(0, 4);
+				else
+					aboveThings [i].AutoMove = moveAmount; //autoCorrection(moveAmount, aboveThings[i].CollisionRectangle);
 				aboveThings.RemoveAt (i);
 			}
 			worldLocation = newPosition;
@@ -89,6 +108,22 @@ namespace Hi
 				if (aboveThings [i] == go)
 					return;
 			aboveThings.Add (go);
+		}
+
+		private Vector2 autoCorrection(Vector2 moveAmount, Rectangle rekt){
+			Vector2 movement = Vector2.Zero;
+			if (!rekt.Intersects (CollisionRectangle))
+				return moveAmount;
+			if(rekt.X + rekt.Width - worldLocation.X < collisionRectangle.Width){
+				movement.X = rekt.X + rekt.Width - worldLocation.X;
+			}else{
+				movement.X = worldLocation.X + collisionRectangle.Width - rekt.X;
+			}
+
+			Console.Write (movement);
+			return movement;
+
+
 		}
 		#endregion
 	}
