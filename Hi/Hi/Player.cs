@@ -39,7 +39,6 @@ namespace Hi {
 
         #region Constructor
         public Player(ContentManager content) {
-
             animations.Add("idle",new AnimationStrip( content.Load<Texture2D>(@"Textures\Sprites\Player\Idle"),48,"idle")  );
 
             animations["idle"].LoopAnimation = true;
@@ -93,14 +92,14 @@ namespace Hi {
                 KeyboardState keyState = Keyboard.GetState();
                 if (keyState.IsKeyDown(Keys.Q) && lastState.IsKeyUp(Keys.Q)) Clean();
                 if (keyState.IsKeyDown(Keys.Left) ||
-                    (gamePad.ThumbSticks.Left.X < -0.3f)) {
+				    keyState.IsKeyDown(Keys.A)) {
                     flipped = false;
                     newAnimation = "run";
                     velocity = new Vector2(-moveScale, velocity.Y);
                 }
 
                 if (keyState.IsKeyDown(Keys.Right) ||
-                    (gamePad.ThumbSticks.Left.X > 0.3f)) {
+                    keyState.IsKeyDown (Keys.D)) {
                     flipped = true;
                     newAnimation = "run";
                     velocity = new Vector2(moveScale, velocity.Y);
@@ -115,7 +114,7 @@ namespace Hi {
                 }
 
                 if (keyState.IsKeyDown(Keys.Up) ||
-                    gamePad.ThumbSticks.Left.Y > 0.3f) {
+				    keyState.IsKeyDown(Keys.W)) {
                     checkLevelTransition();
                 }
 
@@ -140,20 +139,20 @@ namespace Hi {
                 }
                 lastState = keyState;
             }
-
-            velocity += fallSpeed;
+			float elapsed = (float)gameTime.ElapsedGameTime.TotalSeconds;
+            velocity += fallSpeed * 60 * elapsed;
 
             repositionCamera();
             //base.Update(gameTime);
 
             if (!enabled) return;
-            float elapsed = (float)gameTime.ElapsedGameTime.TotalSeconds;
+            
             updateAnimation(gameTime);
             if (velocity.Y != 0) onGround = false;
             Vector2 moveAmount = velocity * elapsed + AutoMove;
-			AutoMove = Vector2.Zero;
             moveAmount = horizontalCollisionTest(moveAmount);
             moveAmount = verticalCollisionTest(moveAmount);
+			AutoMove = Vector2.Zero;
             if (!onGround)
             {
                 if (currentAnimation == "jump")

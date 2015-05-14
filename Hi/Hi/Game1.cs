@@ -8,6 +8,7 @@ using Microsoft.Xna.Framework.GamerServices;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using Microsoft.Xna.Framework.Media;
+using Microsoft.Xna.Framework.Audio;
 using TileEngine;
 
 namespace Hi
@@ -207,6 +208,7 @@ namespace Hi
                 //spriteBatch.Draw(Content.Load<Texture2D>(@"Textures\redTexture"), 
                  //   new Rectangle(600, 10, (int) (player.drugStatus * 1.8), 20),
                  //   Color.White);
+
             }
 
             if(gameState == GameState.Drugged){

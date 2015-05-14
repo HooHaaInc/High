@@ -30,7 +30,7 @@ namespace TileEngine
 		#endregion
 
 		#region Public Methods
-		public void TooglePassable(){
+		public void TogglePassable(){
 			Passable = !Passable;
 		}
 		#endregion

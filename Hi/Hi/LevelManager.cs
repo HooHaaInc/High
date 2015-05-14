@@ -91,9 +91,7 @@ namespace Hi
                     }
 
                     if (TileMap.CellCodeValue(x, y) == "PLATFORM") {
-                        platforms.Add(new Platform(Content.Load<Texture2D>(@"Textures\Sprites\ladrilloGris")
-                            ,new Rectangle(x,y,64,32)
-                            ,new Vector2(3, 0), 64));
+                        platforms.Add(new Platform(Content, x, y, 0));
                     }
 
                 }
