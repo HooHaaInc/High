@@ -83,7 +83,7 @@ namespace Hi {
         #endregion
 
         #region Public Methods
-        public override void Update(GameTime gameTime) {
+        public override void Update(GameTime gameTime, bool drugged) {
             if (!Dead) {
                 string newAnimation = "idle";
 
@@ -143,7 +143,7 @@ namespace Hi {
             velocity += fallSpeed * 60 * elapsed;
 
             repositionCamera();
-            //base.Update(gameTime);
+            //base.Update(gameTime, true);
 
             if (!enabled) return;
             
@@ -236,6 +236,16 @@ namespace Hi {
             if (screenLocX < 200) {
                 Camera.Move(new Vector2(screenLocX - 200, 0));
             }
+
+			int screenLocY = (int)Camera.WorldToScreen(worldLocation).Y;
+
+			if (screenLocY > 400) {
+				Camera.Move(new Vector2(0, screenLocY - 400));
+			}
+
+			if (screenLocY < 200) {
+				Camera.Move(new Vector2(0, screenLocY - 200));
+			}
         }
 
         private void checkLevelTransition() {

@@ -28,6 +28,7 @@ namespace Hi
         protected Dictionary<string, AnimationStrip> animations = new Dictionary<string, AnimationStrip>();
         protected string currentAnimation;
 		protected Vector2 autoMove;
+		protected Vector2 defaultLocation;
 		protected Texture2D rekt = null;
 
         #endregion
@@ -96,9 +97,17 @@ namespace Hi
             }
         }
 
-        public virtual void Update(GameTime gameTime)
+        public virtual void Update(GameTime gameTime, bool drugged)
         {
             if (!enabled) return;
+			Vector2 newPosition;
+			if(!drugged){
+				newPosition = defaultLocation;
+				newPosition = new Vector2(MathHelper.Clamp(newPosition.X, 0, Camera.WorldRectangle.Width - frameWidth),
+				                          MathHelper.Clamp(newPosition.Y, 2 * (-TileMap.TileHeight), Camera.WorldRectangle.Height - frameHeight));
+				worldLocation = newPosition;
+				return;
+			}
             float elapsed = (float)gameTime.ElapsedGameTime.TotalSeconds;
             updateAnimation(gameTime);
             if (velocity.Y != 0) onGround = false;
@@ -107,7 +116,7 @@ namespace Hi
 
             moveAmount = horizontalCollisionTest(moveAmount);
             moveAmount = verticalCollisionTest(moveAmount);
-            Vector2 newPosition = worldLocation + moveAmount;
+            newPosition = worldLocation + moveAmount;
             newPosition = new Vector2(MathHelper.Clamp(newPosition.X, 0, Camera.WorldRectangle.Width - frameWidth),
             MathHelper.Clamp(newPosition.Y, 2 * (-TileMap.TileHeight), Camera.WorldRectangle.Height - frameHeight));
             worldLocation = newPosition;

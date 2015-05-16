@@ -48,7 +48,7 @@ namespace Hi
         {
             // TODO: Add your initialization logic here
             this.graphics.PreferredBackBufferWidth = 800;
-            this.graphics.PreferredBackBufferHeight = 400;
+            this.graphics.PreferredBackBufferHeight = 600;
             this.graphics.ApplyChanges();
             base.Initialize();
         }
@@ -66,10 +66,10 @@ namespace Hi
 	            TileMap.spriteFont = Content.Load<SpriteFont>(@"Fonts\Pericles8");
 	            pericles8 = Content.Load<SpriteFont>(@"Fonts\Pericles8");
 			}catch{
-
+				pericles8 = null;
 			}
             titleScreen = Content.Load<Texture2D>(@"Textures\TitleScreen");
-            Camera.WorldRectangle = new Rectangle(0, 0, 160 * TileMap.TileHeight, 12 *
+            Camera.WorldRectangle = new Rectangle(0, 0, TileMap.MapWidth * TileMap.TileHeight, TileMap.MapHeight *
             TileMap.TileWidth);
             Camera.Position = Vector2.Zero;
             Camera.ViewPortWidth = 800;
@@ -122,8 +122,8 @@ namespace Hi
                 }
             }
             if (gameState == GameState.Playing || gameState == GameState.Drugged){
-                player.Update(gameTime);
-                LevelManager.Update(gameTime);
+				player.Update(gameTime, gameState == GameState.Drugged);
+				LevelManager.Update(gameTime, gameState == GameState.Drugged);
                 if (player.Dead){
                     if (player.LivesRemaining > 0){
                         gameState = GameState.PlayerDead;
@@ -133,10 +133,14 @@ namespace Hi
                         deathTimer = 0.0f;
                     }
                 }
+				if (gameState == GameState.Playing && player.drugged)
+					gameState = GameState.Drugged;
+				else if (gameState == GameState.Drugged && !player.drugged)
+					gameState = GameState.Playing;
             }
             if (gameState == GameState.PlayerDead){
-                player.Update(gameTime);
-                LevelManager.Update(gameTime);
+				player.Update(gameTime, gameState == GameState.Drugged);
+				LevelManager.Update(gameTime, gameState == GameState.Drugged);
                 deathTimer += elapsed;
                 if (deathTimer > deathDelay){
                     player.WorldLocation = Vector2.Zero;
@@ -182,10 +186,10 @@ namespace Hi
             (gameState == GameState.PlayerDead) ||
             (gameState == GameState.GameOver))
             {
-                TileMap.Draw(spriteBatch,player.drugged);
-                player.Draw(spriteBatch);
-                LevelManager.Draw(spriteBatch);
-				try{
+                TileMap.Draw(spriteBatch, gameState == GameState.Drugged);
+				player.Draw(spriteBatch);
+				LevelManager.Draw(spriteBatch);
+				if(pericles8 != null){
 	                spriteBatch.DrawString(
 	                pericles8,
 	                "Drogas: " + player.drogas.ToString(),
@@ -200,7 +204,7 @@ namespace Hi
 	                "Vidas:  " + player.LivesRemaining.ToString(),
 	                livesPosition,
 	                Color.White);
-				}catch{}
+				}
                 spriteBatch.Draw(Content.Load<Texture2D>(@"Textures\redTexture"), 
                     new Rectangle(600, 10, (int) (player.drugStatus * 1.8), 20),
                     Color.White);

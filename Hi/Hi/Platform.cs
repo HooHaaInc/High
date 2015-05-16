@@ -20,7 +20,6 @@ namespace Hi
 		int danger;
 		int limit;
 		float elapsed = 0;
-		Vector2 hk;
 		#endregion
 
 		#region Constructor
@@ -31,6 +30,8 @@ namespace Hi
             animations["plat"].LoopAnimation = true;
             animations["plat"].FrameLength = 0.15f;
             animations["plat"].setSignal(20);
+
+
             drawDepth = 0.875f;
 			collisionRectangle = new Rectangle(0, 0, rect.Width, rect.Height);
 			velocity = movement;
@@ -41,44 +42,60 @@ namespace Hi
 			PlayAnimation ("plat");
             enabled = true;
 			worldLocation = new Vector2 (TileMap.TileWidth * rect.X, TileMap.TileHeight * rect.Y);
-			hk = new Vector2 (TileMap.TileWidth * rect.X, TileMap.TileHeight * rect.Y);
+			defaultLocation = worldLocation;
 		}
 
-		public Platform(ContentManager content, int x, int y, int type){
+		public Platform(ContentManager content, int x, int y){
 			worldLocation = new Vector2 (TileMap.TileWidth * x, TileMap.TileHeight * y);
-			switch(type){
-				default:
-				animations.Add ("plat", new AnimationStrip(
-					content.Load<Texture2D>(@"Textures\Sprites\ladrilloGris"), 64, "plat"));
-				animations["plat"].LoopAnimation = true;
-				animations["plat"].FrameLength = 0.15f;
-				animations["plat"].setSignal(20);
-				drawDepth = 0.875f;
-				collisionRectangle = new Rectangle(0, 0, 64, 12);
-				velocity = new Vector2(3, 0);
-				limit = 64;
-				this.danger = 0;
-				frameWidth = 64;
-				frameHeight = 12;
-				PlayAnimation ("plat");
-				enabled = true;
-				hk = new Vector2 (TileMap.TileWidth * x, TileMap.TileHeight * y);
-				break;
-			}
+			defaultLocation = worldLocation;
+			animations.Add ("plat", new AnimationStrip (
+				content.Load<Texture2D> (@"Textures\Sprites\ladrilloGris"), 64, "plat"));
+			animations ["plat"].LoopAnimation = true;
+			animations ["plat"].FrameLength = 0.15f;
+			animations ["plat"].setSignal (20);
+
+			animations.Add ("table", new AnimationStrip (
+				content.Load <Texture2D> (@"Textures\Sprites\MonsterA\silla"), 48, "table"));
+			animations ["table"].LoopAnimation = true;
+			animations ["table"].setSignal (20);
+
+			drawDepth = 0.875f;
+			collisionRectangle = new Rectangle(0, 0, 64, 12);
+			velocity = new Vector2(3, 0);
+			limit = 64;
+			this.danger = 0;
+			frameWidth = 64;
+			frameHeight = 12;
+			PlayAnimation ("plat");
+			enabled = true;
 		}
 		#endregion
 
 		#region Public Methods
-		public override void Update (GameTime gameTime)
+		public override void Update (GameTime gameTime, bool drugged)
 		{
 			if (!enabled)
+				return; 
+			Vector2 newPosition;
+			if(!drugged){
+				newPosition = defaultLocation;
+				newPosition = new Vector2 (
+					MathHelper.Clamp (newPosition.X, 0, Camera.WorldRectangle.Width - frameWidth),
+					MathHelper.Clamp (newPosition.Y, 2 * (-TileMap.TileHeight), Camera.WorldRectangle.Height - frameHeight));
+				worldLocation = newPosition;
+				currentAnimation = "table";
+				for (int i=aboveThings.Count-1; i>=0; --i) {
+					if (aboveThings [i].CollisionRectangle.Intersects (CollisionRectangle) && velocity.Y == 0)
+						aboveThings [i].AutoMove = new Vector2 (0, 4);
+					aboveThings.RemoveAt (i);
+				}
 				return;
-			float time = (float)gameTime.ElapsedGameTime.TotalSeconds;
-			elapsed += time;
+			}
+			elapsed += (float)gameTime.ElapsedGameTime.TotalSeconds;;
             updateAnimation(gameTime);
 			if (velocity.Y == 0 && velocity.X == 0)
 				return;
-			Vector2 newPosition = hk + limit*(new Vector2 ((float)Math.Sin (velocity.X*elapsed), (float)Math.Sin (velocity.Y*elapsed)));
+			newPosition = defaultLocation + limit*(new Vector2 ((float)Math.Sin (velocity.X*elapsed), (float)Math.Sin (velocity.Y*elapsed)));
 			newPosition = new Vector2 (
 				MathHelper.Clamp (newPosition.X, 0, Camera.WorldRectangle.Width - frameWidth),
 				MathHelper.Clamp (newPosition.Y, 2 * (-TileMap.TileHeight), Camera.WorldRectangle.Height - frameHeight));
@@ -92,6 +109,7 @@ namespace Hi
 				aboveThings.RemoveAt (i);
 			}
 			worldLocation = newPosition;
+			currentAnimation = "plat";
             //base.Update(gameTime);
 
 		}
