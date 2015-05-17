@@ -21,6 +21,7 @@ namespace Hi
         SpriteBatch spriteBatch;
         Player player;
         SpriteFont pericles8;
+		Song normal,high,gettingHi,gettingNormal;
         Vector2 scorePosition = new Vector2(20, 10);
         enum GameState { TitleScreen, Playing, PlayerDead, GameOver, Drugged };
         GameState gameState = GameState.TitleScreen;
@@ -30,6 +31,8 @@ namespace Hi
         Texture2D titleScreen;
         float deathTimer = 0.0f;
         float deathDelay = 5.0f;
+		Boolean entro = false;
+		float sec=0.0f;
 
         public Game1()
         {
@@ -58,6 +61,10 @@ namespace Hi
         /// </summary>
         protected override void LoadContent()
         {
+			normal = Content.Load<Song> ("sound/normal.wav");
+			high = Content.Load<Song> ("sound/High.wav");
+			gettingHi = Content.Load<Song> ("sound/gettinHi.wav");
+			gettingNormal = Content.Load<Song> ("sound/gettingBack.wav");
 
             spriteBatch = new SpriteBatch(GraphicsDevice);
             TileMap.Initialize(Content.Load<Texture2D>(@"Textures\PlatformTiles"));
@@ -65,6 +72,7 @@ namespace Hi
 	            TileMap.spriteFont = Content.Load<SpriteFont>(@"Fonts\Pericles8");
 	            pericles8 = Content.Load<SpriteFont>(@"Fonts\Pericles8");
 			}catch{
+			
 
 			}
             titleScreen = Content.Load<Texture2D>(@"Textures\TitleScreen");
@@ -118,9 +126,12 @@ namespace Hi
                 {
                     StartNewGame();
                     gameState = GameState.Playing;
+					//MediaPlayer.Pause ();
+					MediaPlayer.Play (normal);
                 }
             }
             if (gameState == GameState.Playing || gameState == GameState.Drugged){
+
                 player.Update(gameTime);
                 LevelManager.Update(gameTime);
                 if (player.Dead){
@@ -131,9 +142,44 @@ namespace Hi
                         gameState = GameState.GameOver;
                         deathTimer = 0.0f;
                     }
-                }
+				}
+
+				sec += (float)gameTime.ElapsedGameTime.TotalSeconds;
+				Console.WriteLine (sec);
+
+				if (player.drugged && (!entro && sec > 4.4f)) {
+					MediaPlayer.Pause ();
+					MediaPlayer.Play (high);
+					MediaPlayer.IsRepeating = true;
+					entro = true;
+				}
+				if (!player.drugged && (!entro && sec > 2.0f)) {
+					MediaPlayer.Pause ();
+					MediaPlayer.Play (normal);
+					MediaPlayer.IsRepeating = true;
+					entro = true;
+				}
+
+				if (player.drugged && gameState == GameState.Playing) {
+					MediaPlayer.Pause ();
+					MediaPlayer.Play (gettingHi);
+					sec = 0.0f;
+					entro = false;
+					MediaPlayer.IsRepeating = false;
+					gameState = GameState.Drugged;
+				}
+				if (!player.drugged && gameState == GameState.Drugged) {
+					MediaPlayer.Pause ();
+					MediaPlayer.Play (gettingNormal);
+					sec = 0.0f;
+					entro = false;
+					MediaPlayer.IsRepeating = false;
+					gameState = GameState.Playing;
+				}
+
             }
             if (gameState == GameState.PlayerDead){
+				MediaPlayer.Pause ();
                 player.Update(gameTime);
                 LevelManager.Update(gameTime);
                 deathTimer += elapsed;
@@ -210,6 +256,7 @@ namespace Hi
             }
 
             if(gameState == GameState.Drugged){
+
                 TileMap.Draw(spriteBatch,player.drugged);
                 player.Draw(spriteBatch);
                 LevelManager.Draw(spriteBatch);

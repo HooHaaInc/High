@@ -131,6 +131,7 @@ namespace Hi {
 
                 if (keyState.IsKeyDown(Keys.E) && lastState.IsKeyUp(Keys.E))
                 {
+
                     Drug();
                     if (dead) newAnimation = "die";
                 }
@@ -140,14 +141,14 @@ namespace Hi {
                 }
                 lastState = keyState;
             }
-
-            velocity += fallSpeed;
+			float elapsed = (float)gameTime.ElapsedGameTime.TotalSeconds;
+            velocity += fallSpeed * 60 * elapsed;
 
             repositionCamera();
             //base.Update(gameTime);
 
             if (!enabled) return;
-            float elapsed = (float)gameTime.ElapsedGameTime.TotalSeconds;
+            
             updateAnimation(gameTime);
             if (velocity.Y != 0) onGround = false;
             Vector2 moveAmount = velocity * elapsed + AutoMove;
