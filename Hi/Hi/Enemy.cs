@@ -68,7 +68,7 @@ namespace Hi {
 				codeBasedBlocks = true;
 				PlayAnimation ("run");
 				break;
-			case 3:
+			case 2:
 				animations.Add ("idle",
 				                new AnimationStrip (
 					content.Load<Texture2D> (

@@ -163,7 +163,7 @@ namespace Hi
                         if (player.CollisionRectangle.Intersects(
                             enemies[x].CollisionRectangle))
                         {
-                            if (enemies[x].Killable && player.WorldCenter.Y < enemies[x].WorldLocation.Y)
+                            if (enemies[x].Killable && player.WorldCenter.Y < enemies[x].WorldLocation.Y && player.velocity.Y > 0)
                             {
                                 player.Jump();
                                 player.Score += 5;

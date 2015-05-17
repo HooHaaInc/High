@@ -77,6 +77,7 @@ namespace Hi
 	            TileMap.spriteFont = Content.Load<SpriteFont>(@"Fonts\Pericles8");
 	            pericles8 = Content.Load<SpriteFont>(@"Fonts\Pericles8");
 			}catch{
+				pericles8 = null;
 				myFont = new BitFont (Content);
 			}
             titleScreen = Content.Load<Texture2D>(@"Textures\TitleScreen");

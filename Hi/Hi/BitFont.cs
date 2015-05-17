@@ -41,7 +41,7 @@ namespace Hi
 				FontChar fc;
 				if(characterMap.TryGetValue (c, out fc)){
 					Rectangle sourceRectangle = new Rectangle (fc.X, fc.Y, fc.Width, fc.Height);
-					Vector2 position = new Vector2 (dx + fc.XOffset, dy + fc.YOffset);
+					Rectangle position = new Rectangle (dx + fc.XOffset, dy + fc.YOffset, fc.Width, fc.Height);
 					spriteBatch.Draw (fontTexture, position, sourceRectangle, Color.White);
 					dx += fc.XAdvance;
 				}
