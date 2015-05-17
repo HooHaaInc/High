@@ -13,6 +13,7 @@ namespace Hi
         {
             worldLocation.X = TileMap.TileWidth * cellX;
             worldLocation.Y = TileMap.TileHeight * cellY;
+			defaultLocation = worldLocation;
             frameWidth = 48;
             frameHeight = 48;
             animations.Add("idle",

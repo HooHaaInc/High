@@ -63,7 +63,7 @@ namespace Hi
         public static void LoadLevel(int levelNumber)
         {
             TileMap.LoadMap((System.IO.FileStream)TitleContainer.OpenStream(
-                @"HiContent/Maps/MAP008.MAP"));// +levelNumber.ToString().PadLeft(3, '0') + ".MAP"));
+                @"HiContent/Maps/MAP016.MAP"));// +levelNumber.ToString().PadLeft(3, '0') + ".MAP"));
 
             drugs.Clear();
             enemies.Clear();
@@ -73,28 +73,51 @@ namespace Hi
             {
                 for (int y = 0; y < TileMap.MapHeight; y++)
                 {
-                    if (TileMap.CellCodeValue(x, y) == "START")
+					switch(TileMap.CellCodeValue (x, y)){
+					case "START":
+						player.WorldLocation = new Vector2 (
+							x * TileMap.TileWidth,
+							y * TileMap.TileHeight);
+						break;
+					case "DRUG":
+						drugs.Add (new Drug (Content, x, y));
+						break;
+					case "ENEMY":
+					case "CHAIR":
+						enemies.Add (new Enemy (Content, x, y, 1));
+						break;
+					case "POT":
+						enemies.Add (new Enemy (Content, x, y, 2));
+						break;
+					case "PLATFORM":
+						platforms.Add (new Platform (Content, x, y));
+						break;
+					}
+
+                    /*if (TileMap.CellCodeValue(x, y) == "START")
                     {
                         player.WorldLocation = new Vector2(
                             x * TileMap.TileWidth,
                             y * TileMap.TileHeight);
                     }
 
-                    if (TileMap.CellCodeValue(x, y) == "DRUG")
+                    else if (TileMap.CellCodeValue(x, y) == "DRUG")
                     {
                         drugs.Add(new Drug(Content, x, y));
                     }
 
-                    if (TileMap.CellCodeValue(x, y) == "ENEMY")
+                    else if (TileMap.CellCodeValue(x, y) == "ENEMY" ||
+					    TileMap.CellCodeValue (x, y) == "CHAIR")
                     {
-                        enemies.Add(new Enemy(Content, x, y));
+                        enemies.Add(new Enemy(Content, x, y, 1));
                     }
 
-                    if (TileMap.CellCodeValue(x, y) == "PLATFORM") {
-                        platforms.Add(new Platform(Content.Load<Texture2D>(@"Textures\Sprites\ladrilloGris")
-                            ,new Rectangle(x,y,64,32)
-                            ,new Vector2(3, 0), 64));
+					else if(TileMap)
+
+                    else if (TileMap.CellCodeValue(x, y) == "PLATFORM") {
+                        platforms.Add(new Platform(Content, x, y, 0));
                     }
+					*/
 
                 }
             }
@@ -112,18 +135,18 @@ namespace Hi
             player.WorldLocation = respawnLocation;
         }
 
-        public static void Update(GameTime gameTime)
+        public static void Update(GameTime gameTime, bool drugged)
         {
             if (!player.Dead)
             {
                 checkCurrentCellCode(); 
 
 				for (int i=0; i<platforms.Count (); ++i)
-					platforms [i].Update (gameTime);
+					platforms [i].Update (gameTime, drugged);
 
                 for (int x = drugs.Count - 1; x >= 0; x--)
                 {
-                    drugs[x].Update(gameTime);
+					drugs[x].Update(gameTime, drugged);
                     if (player.CollisionRectangle.Intersects(
                         drugs[x].CollisionRectangle))
                     {
@@ -134,18 +157,18 @@ namespace Hi
 
                 for (int x = enemies.Count - 1; x >= 0; x--)
                 {
-                    enemies[x].Update(gameTime);
-                    if (!enemies[x].Dead)
+					enemies[x].Update(gameTime, drugged);
+                    if (!enemies[x].Dead && drugged)
                     {
                         if (player.CollisionRectangle.Intersects(
                             enemies[x].CollisionRectangle))
                         {
-                            if (player.WorldCenter.Y < enemies[x].WorldLocation.Y)
+                            if (enemies[x].Killable && player.WorldCenter.Y < enemies[x].WorldLocation.Y)
                             {
                                 player.Jump();
                                 player.Score += 5;
                                 enemies[x].PlayAnimation("die");
-                                enemies[x].Dead = true; ;
+                                enemies[x].Dead = true;
                             }
                             else
                             {

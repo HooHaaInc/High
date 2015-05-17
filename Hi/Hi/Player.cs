@@ -39,7 +39,6 @@ namespace Hi {
 
         #region Constructor
         public Player(ContentManager content) {
-
             animations.Add("idle",new AnimationStrip( content.Load<Texture2D>(@"Textures\Sprites\Player\Idle"),48,"idle")  );
 
             animations["idle"].LoopAnimation = true;
@@ -84,7 +83,7 @@ namespace Hi {
         #endregion
 
         #region Public Methods
-        public override void Update(GameTime gameTime) {
+        public override void Update(GameTime gameTime, bool drugged) {
             if (!Dead) {
                 string newAnimation = "idle";
 
@@ -93,14 +92,14 @@ namespace Hi {
                 KeyboardState keyState = Keyboard.GetState();
                 if (keyState.IsKeyDown(Keys.Q) && lastState.IsKeyUp(Keys.Q)) Clean();
                 if (keyState.IsKeyDown(Keys.Left) ||
-                    (gamePad.ThumbSticks.Left.X < -0.3f)) {
+				    keyState.IsKeyDown(Keys.A)) {
                     flipped = false;
                     newAnimation = "run";
                     velocity = new Vector2(-moveScale, velocity.Y);
                 }
 
                 if (keyState.IsKeyDown(Keys.Right) ||
-                    (gamePad.ThumbSticks.Left.X > 0.3f)) {
+                    keyState.IsKeyDown (Keys.D)) {
                     flipped = true;
                     newAnimation = "run";
                     velocity = new Vector2(moveScale, velocity.Y);
@@ -115,7 +114,7 @@ namespace Hi {
                 }
 
                 if (keyState.IsKeyDown(Keys.Up) ||
-                    gamePad.ThumbSticks.Left.Y > 0.3f) {
+				    keyState.IsKeyDown(Keys.W)) {
                     checkLevelTransition();
                 }
 
@@ -145,16 +144,16 @@ namespace Hi {
             velocity += fallSpeed * 60 * elapsed;
 
             repositionCamera();
-            //base.Update(gameTime);
+            //base.Update(gameTime, true);
 
             if (!enabled) return;
             
             updateAnimation(gameTime);
             if (velocity.Y != 0) onGround = false;
             Vector2 moveAmount = velocity * elapsed + AutoMove;
-			AutoMove = Vector2.Zero;
             moveAmount = horizontalCollisionTest(moveAmount);
             moveAmount = verticalCollisionTest(moveAmount);
+			AutoMove = Vector2.Zero;
             if (!onGround)
             {
                 if (currentAnimation == "jump")
@@ -213,7 +212,7 @@ namespace Hi {
             {
                 drugged = true;
                 drogas--;
-                Random random = new Random();
+                //Random random = new Random();
                 int percentage = 40;// random.Next(40, 40);
                 drugStatus += percentage;
                 if (drugStatus > 100) Kill();
@@ -238,6 +237,16 @@ namespace Hi {
             if (screenLocX < 200) {
                 Camera.Move(new Vector2(screenLocX - 200, 0));
             }
+
+			int screenLocY = (int)Camera.WorldToScreen(worldLocation).Y;
+
+			if (screenLocY > 250) {
+				Camera.Move(new Vector2(0, screenLocY - 250));
+			}
+
+			if (screenLocY < 150) {
+				Camera.Move(new Vector2(0, screenLocY - 150));
+			}
         }
 
         private void checkLevelTransition() {
