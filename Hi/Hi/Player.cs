@@ -211,7 +211,7 @@ namespace Hi {
             {
                 drugged = true;
                 drogas--;
-                Random random = new Random();
+                //Random random = new Random();
                 int percentage = 40;// random.Next(40, 40);
                 drugStatus += percentage;
                 if (drugStatus > 100) Kill();
@@ -239,12 +239,12 @@ namespace Hi {
 
 			int screenLocY = (int)Camera.WorldToScreen(worldLocation).Y;
 
-			if (screenLocY > 400) {
-				Camera.Move(new Vector2(0, screenLocY - 400));
+			if (screenLocY > 250) {
+				Camera.Move(new Vector2(0, screenLocY - 250));
 			}
 
-			if (screenLocY < 200) {
-				Camera.Move(new Vector2(0, screenLocY - 200));
+			if (screenLocY < 150) {
+				Camera.Move(new Vector2(0, screenLocY - 150));
 			}
         }
 
