@@ -130,6 +130,7 @@ namespace Hi {
 
                 if (keyState.IsKeyDown(Keys.E) && lastState.IsKeyUp(Keys.E))
                 {
+
                     Drug();
                     if (dead) newAnimation = "die";
                 }

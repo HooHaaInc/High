@@ -9,7 +9,7 @@ using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using Microsoft.Xna.Framework.Media;
 using TileEngine;
-using BmFont;
+using BMFont;
 
 namespace Hi
 {
@@ -23,6 +23,7 @@ namespace Hi
         SpriteBatch spriteBatch;
         Player player;
         SpriteFont pericles8;
+		Song normal,high,gettingHi,gettingNormal;
         Vector2 scorePosition = new Vector2(20, 10);
         enum GameState { TitleScreen, Playing, PlayerDead, GameOver, Drugged };
 		enum MenuOptions { Play = 0, Instructions, Exit };
@@ -39,9 +40,14 @@ namespace Hi
         Texture2D titleScreen;
         float deathTimer = 0.0f;
         float deathDelay = 5.0f;
+
+		Boolean entro = true;
+		float sec=0.0f;
+
 		BitFont myFont;
 		Keys[] lastPressed;
 		#endregion
+
 
         public Game1()
         {
@@ -70,6 +76,10 @@ namespace Hi
         /// </summary>
         protected override void LoadContent()
         {
+			normal = Content.Load<Song> ("sound/normal.wav");
+			high = Content.Load<Song> ("sound/High.wav");
+			gettingHi = Content.Load<Song> ("sound/gettinHi.wav");
+			gettingNormal = Content.Load<Song> ("sound/gettingBack.wav");
 
             spriteBatch = new SpriteBatch(GraphicsDevice);
             TileMap.Initialize(Content.Load<Texture2D>(@"Textures\PlatformTiles"));
@@ -79,7 +89,7 @@ namespace Hi
 			}catch{
 				pericles8 = null;
 				myFont = new BitFont (Content);
-			}
+			};
             titleScreen = Content.Load<Texture2D>(@"Textures\TitleScreen");
             Camera.WorldRectangle = new Rectangle(0, 0, TileMap.MapWidth * TileMap.TileHeight, TileMap.MapHeight *
             TileMap.TileWidth);
@@ -127,6 +137,19 @@ namespace Hi
             GamePadState gamepadState = GamePad.GetState(PlayerIndex.One);
             float elapsed = (float)gameTime.ElapsedGameTime.TotalSeconds;
             if (gameState == GameState.TitleScreen){
+
+               if (keyState.IsKeyDown(Keys.Space) || gamepadState.Buttons.A == ButtonState.Pressed)
+                {
+                    StartNewGame();
+                    gameState = GameState.Playing;
+					//MediaPlayer.Pause ();
+					MediaPlayer.Play (normal);
+                }
+            }
+            if (gameState == GameState.Playing || gameState == GameState.Drugged){
+
+                player.Update(gameTime,false);
+                LevelManager.Update(gameTime,false);
 				if (keyState.IsKeyDown (Keys.Enter) || gamepadState.Buttons.A == ButtonState.Pressed) {
 					switch (menuOptions) {
 					case MenuOptions.Play:
@@ -159,15 +182,56 @@ namespace Hi
                         gameState = GameState.GameOver;
                         deathTimer = 0.0f;
                     }
+				}
+
+				sec += (float)gameTime.ElapsedGameTime.TotalSeconds;
+				Console.WriteLine (sec);
+
+				if (player.drugged && (!entro && sec > 4.4f)) {
+					MediaPlayer.Pause ();
+					MediaPlayer.Play (high);
+					MediaPlayer.IsRepeating = true;
+					entro = true;
+				}
+				if (!player.drugged && (!entro && sec > 2.0f)) {
+					MediaPlayer.Pause ();
+					MediaPlayer.Play (normal);
+					MediaPlayer.IsRepeating = true;
+					entro = true;
+				}
+
+				if (player.drugged && gameState == GameState.Playing) {
+					MediaPlayer.Pause ();
+					MediaPlayer.Play (gettingHi);
+					sec = 0.0f;
+					entro = false;
+					MediaPlayer.IsRepeating = false;
+					gameState = GameState.Drugged;
+				}
+				if (!player.drugged && gameState == GameState.Drugged) {
+					MediaPlayer.Pause ();
+					MediaPlayer.Play (gettingNormal);
+					sec = 0.0f;
+					entro = false;
+					MediaPlayer.IsRepeating = false;
+					gameState = GameState.Playing;
+				}
+
+            }
+            if (gameState == GameState.PlayerDead){
+				MediaPlayer.Pause ();
+                player.Update(gameTime,false);
+                LevelManager.Update(gameTime,false);
                 }
 				if (gameState == GameState.Playing && player.drugged)
 					gameState = GameState.Drugged;
 				else if (gameState == GameState.Drugged && !player.drugged)
 					gameState = GameState.Playing;
-            }
+            
             if (gameState == GameState.PlayerDead){
 				player.Update(gameTime, gameState == GameState.Drugged);
 				LevelManager.Update(gameTime, gameState == GameState.Drugged);
+
                 deathTimer += elapsed;
                 if (deathTimer > deathDelay){
                     player.WorldLocation = Vector2.Zero;
@@ -279,6 +343,7 @@ namespace Hi
             }
 
             if(gameState == GameState.Drugged){
+
                 TileMap.Draw(spriteBatch,player.drugged);
                 player.Draw(spriteBatch);
                 LevelManager.Draw(spriteBatch);
