@@ -55,7 +55,7 @@ namespace Hi
 			animations ["plat"].setSignal (20);
 
 			animations.Add ("table", new AnimationStrip (
-				content.Load <Texture2D> (@"Textures\Sprites\MonsterA\silla"), 48, "table"));
+				content.Load <Texture2D> (@"Textures\Sprites\MonsterA\Idle"), 48, "table"));
 			animations ["table"].LoopAnimation = true;
 			animations ["table"].setSignal (20);
 
@@ -72,12 +72,12 @@ namespace Hi
 		#endregion
 
 		#region Public Methods
-		public override void Update (GameTime gameTime, bool drugged)
+		public override void Update (GameTime gameTime)
 		{
 			if (!enabled)
 				return; 
 			Vector2 newPosition;
-			if(!drugged){
+			if(objectState == ObjectStates.Normal){
 				newPosition = defaultLocation;
 				newPosition = new Vector2 (
 					MathHelper.Clamp (newPosition.X, 0, Camera.WorldRectangle.Width - frameWidth),

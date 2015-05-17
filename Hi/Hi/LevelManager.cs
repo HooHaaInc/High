@@ -62,8 +62,13 @@ namespace Hi
         #region Public Methods
         public static void LoadLevel(int levelNumber)
         {
-            TileMap.LoadMap((System.IO.FileStream)TitleContainer.OpenStream(
-                @"HiContent/Maps/MAP016.MAP"));// +levelNumber.ToString().PadLeft(3, '0') + ".MAP"));
+
+            // vv usen esta en monodevelop
+            //TileMap.LoadMap((System.IO.FileStream)TitleContainer.OpenStream(
+                //@"HiContent/Maps/MAP016.MAP"));// +levelNumber.ToString().PadLeft(3, '0') + ".MAP"));
+
+            // vv usen esta en XNA
+            TileMap.LoadMap((System.IO.FileStream)TitleContainer.OpenStream(@"Content/Maps/MAP016.MAP"));
 
             drugs.Clear();
             enemies.Clear();
@@ -142,22 +147,22 @@ namespace Hi
                 checkCurrentCellCode(); 
 
 				for (int i=0; i<platforms.Count (); ++i)
-					platforms [i].Update (gameTime, drugged);
+					platforms [i].Update (gameTime);
 
                 for (int x = drugs.Count - 1; x >= 0; x--)
                 {
-					drugs[x].Update(gameTime, drugged);
+					drugs[x].Update(gameTime);
                     if (player.CollisionRectangle.Intersects(
                         drugs[x].CollisionRectangle))
                     {
                         drugs.RemoveAt(x);
-                        player.drogas++;
+                        player.drugCount++;
                     }
                 }
 
                 for (int x = enemies.Count - 1; x >= 0; x--)
                 {
-					enemies[x].Update(gameTime, drugged);
+					enemies[x].Update(gameTime);
                     if (!enemies[x].Dead && drugged)
                     {
                         if (player.CollisionRectangle.Intersects(
@@ -206,6 +211,16 @@ namespace Hi
 			}
 			return null;
 		}
+
+         public static void toggleDrugged() {
+           // foreach (Drug gem in drugs)
+              //  gem.toggleDrugged();
+
+            foreach (Enemy enemy in enemies)
+                enemy.toggleDrugged();
+            foreach (Platform platform in platforms)
+                platform.toggleDrugged();
+        }
 
         #endregion
 

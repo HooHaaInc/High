@@ -252,16 +252,50 @@ namespace TileEngine
 		}
 		#endregion
 
-		#region LOading and Saving Maps
-		public static void LoadMap(FileStream fileStream){
-			try{
-				BinaryFormatter formater = new BinaryFormatter();
-				mapCells = (MapSquare[,])formater.Deserialize (fileStream);
-				fileStream.Close ();
-			}catch{
+		#region Loading and Saving Maps
 
-			}
-		}
+        public static void SaveMap(FileStream fileStream)
+        {
+            BinaryFormatter formatter = new BinaryFormatter();
+            formatter.Serialize(fileStream, mapCells);
+            fileStream.Close();
+        }
+
+        public static void LoadMap(FileStream fileStream)
+        {
+            try
+            {
+                BinaryFormatter formatter = new BinaryFormatter();
+                //mapCells = (MapSquare[,])formatter.Deserialize(fileStream);
+                MapSquare[,] aux = (MapSquare[,])formatter.Deserialize(fileStream);
+                for (int x = 0; x < aux.GetLength(0); x++)
+                {
+                    for (int y = 0; y < aux.GetLength(1); y++)
+                    {
+                        mapCells[x, y] = aux[x, y];
+                    }
+                }
+                //for (int i = aux.GetLength(1); j < mapCells.GetLength(1); i++) {
+                //    for (int j = aux.GetLength(0); j < mapCells.GetLength(1); j++) { 
+                //        mapCells[ x, y] = new MapSquare(1,0,0 
+                //     }
+                //  }
+                fileStream.Close();
+            }
+            catch
+            {
+                ClearMap();
+            }
+        }
+        public static void ClearMap()
+        {
+            for (int x = 0; x < MapWidth; x++)
+                for (int y = 0; y < MapHeight; y++)
+                    for (int z = 0; z < MapLayers; z++)
+                    {
+                        mapCells[x, y] = new MapSquare(2, 0, 0, "", true);
+                    }
+        }
 		#endregion
 
 		/*public class MapRow{
