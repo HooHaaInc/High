@@ -21,6 +21,7 @@ namespace Hi
         private static List<Drug> drugs = new List<Drug>();
         private static List<Enemy> enemies = new List<Enemy>();
         private static List<Platform> platforms = new List<Platform>();
+        private static List<MapSquare> passableSquares = new List<MapSquare>();
         #endregion
 
         #region Properties
@@ -79,24 +80,27 @@ namespace Hi
                 for (int y = 0; y < TileMap.MapHeight; y++)
                 {
 					switch(TileMap.CellCodeValue (x, y)){
-					case "START":
-						player.WorldLocation = new Vector2 (
-							x * TileMap.TileWidth,
-							y * TileMap.TileHeight);
-						break;
-					case "DRUG":
-						drugs.Add (new Drug (Content, x, y));
-						break;
-					case "ENEMY":
-					case "CHAIR":
-						enemies.Add (new Enemy (Content, x, y, 1));
-						break;
-					case "POT":
-						enemies.Add (new Enemy (Content, x, y, 2));
-						break;
-					case "PLATFORM":
-						platforms.Add (new Platform (Content, x, y));
-						break;
+					    case "START":
+						    player.WorldLocation = new Vector2 (
+							    x * TileMap.TileWidth,
+							    y * TileMap.TileHeight);
+						    break;
+					    case "DRUG":
+						    drugs.Add (new Drug (Content, x, y));
+						    break;
+					    case "ENEMY":
+					    case "CHAIR":
+						    enemies.Add (new Enemy (Content, x, y, 1));
+						    break;
+					    case "POT":
+						    enemies.Add (new Enemy (Content, x, y, 2));
+						    break;
+					    case "PLATFORM":
+						    platforms.Add (new Platform (Content, x, y));
+						    break;
+                        case "DRUGPASS":
+                            passableSquares.Add(TileMap.GetMapSquareAtCell(x,y));
+                            break;
 					}
 
                     /*if (TileMap.CellCodeValue(x, y) == "START")
@@ -220,6 +224,8 @@ namespace Hi
                 enemy.toggleDrugged();
             foreach (Platform platform in platforms)
                 platform.toggleDrugged();
+            foreach (MapSquare mapsquare in passableSquares)
+                mapsquare.TogglePassable();
         }
 
         #endregion

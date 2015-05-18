@@ -244,7 +244,7 @@ namespace Hi
         {
             GraphicsDevice.Clear(Color.Black);
             spriteBatch.Begin(
-            SpriteSortMode.Immediate,
+            SpriteSortMode.BackToFront,
             BlendState.AlphaBlend);
             if (gameState == GameState.TitleScreen)
             {

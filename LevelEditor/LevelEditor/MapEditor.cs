@@ -104,6 +104,7 @@ namespace LevelEditor
             cboCodeValues.Items.Add("Drug");
             cboCodeValues.Items.Add("Enemy");
             cboCodeValues.Items.Add("Lethal");
+            cboCodeValues.Items.Add("DrugPassable");
             cboCodeValues.Items.Add("EnemyBlocking");
             cboCodeValues.Items.Add("Platform");
             cboCodeValues.Items.Add("Start");
@@ -145,6 +146,9 @@ namespace LevelEditor
                     break;
                 case "Lethal" :
                     txtNewCode.Text = "DEAD";
+                    break;
+                case "DrugPassable":
+                    txtNewCode.Text = "DRUGPASS";
                     break;
                 case "EnemyBlocking":
                     txtNewCode.Text = "BLOCK";

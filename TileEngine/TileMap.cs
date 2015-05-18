@@ -195,21 +195,17 @@ namespace TileEngine
 						                               Color.White, 0.0f, Vector2.Zero, SpriteEffects.None, 1f - ((float)z * 0.1f));
 						else
 						{
-							if (currentGreen > 255) currentGreen = 0;
+                            if (currentGreen > 255) currentGreen = 0;
 
-							/*currentColor = new Color(   (float)(Math.Sin(2.0f * Math.PI * ((float)currentGreen) / 255.0f - 1.0f) + 1.0f) * 127.0f,
-                                                        (float)(Math.Sin(2.0f * Math.PI * currentGreen / 255.0f - 1.0f) + 1.0f) * 127.0f,
-                                                        (float)(Math.Sin(2.0f * Math.PI * currentGreen / 255.0f - 1.0f) + 1.0f) * 127.0f);
-                             */
-
-							currentColor = new Color(
-								//((int) ( (Math.Sin( currentGreen  * frequency + 0) * 127 )+ 128)),
-								//((int) ( ( Math.Sin(currentGreen * frequency + 2) * 127 ) + 128)),
-								//((int) ( ( Math.Sin(currentGreen * frequency + 4) * 127 ) + 128))
-								(float)(Math.Sin(currentGreen*frequency + 0)),
-								(float)(Math.Sin(currentGreen*frequency + 2)),
-								(float)(Math.Sin(currentGreen*frequency + 4))
-								);
+                            currentColor = new Color(
+                                (int)((Math.Sin(currentGreen * frequency + Math.PI*2/3) * 127) + 128),
+                                (int)((Math.Sin(currentGreen * frequency + Math.PI*4/3) * 127) + 128),
+                                (int)((Math.Sin(currentGreen * frequency + Math.PI * 2) * 127) + 128)
+                             );
+								//(float)(Math.Sin(currentGreen*frequency + 0)),
+								//(float)(Math.Sin(currentGreen*frequency + 2)),
+								//(float)(Math.Sin(currentGreen*frequency + 4))
+								//);
 							//currentColor = new Color(100, 255, currentGreen);
 							spriteBatch.Draw(tileSheet, CellScreenRectangle(x, y), TileSourceRectangle(mapCells[x, y].LayerTiles[z]),
 							                 currentColor, rotation, Vector2.Zero, SpriteEffects.None, 1f - ((float)z * 0.1f));

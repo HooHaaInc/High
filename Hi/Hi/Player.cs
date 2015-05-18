@@ -259,8 +259,8 @@ namespace Hi
             inyecciones = 3;
             PlayAnimation("idle");
             dead = false;
+            //if(drugged) LevelManager.toggleDrugged();
             drugged = false;
-            LevelManager.toggleDrugged();
             drugStatus = 0;
         }
         #endregion
