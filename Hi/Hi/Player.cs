@@ -130,7 +130,6 @@ namespace Hi {
 
                 if (keyState.IsKeyDown(Keys.E) && lastState.IsKeyUp(Keys.E))
                 {
-
                     Drug();
                     if (dead) newAnimation = "die";
                 }
@@ -223,6 +222,10 @@ namespace Hi {
         {
             PlayAnimation("idle");
             dead = false;
+			drugged = false;
+			drogas = 0;
+			inyecciones = 3;
+			drugStatus = 0;
         }
         #endregion
 

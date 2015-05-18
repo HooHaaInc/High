@@ -76,10 +76,10 @@ namespace Hi
         /// </summary>
         protected override void LoadContent()
         {
-			normal = Content.Load<Song> ("sound/normal.wav");
-			high = Content.Load<Song> ("sound/High.wav");
-			gettingHi = Content.Load<Song> ("sound/gettinHi.wav");
-			gettingNormal = Content.Load<Song> ("sound/gettingBack.wav");
+			normal = Content.Load<Song> ("Sound/normal.wav");
+			high = Content.Load<Song> ("Sound/High.wav");
+			gettingHi = Content.Load<Song> ("Sound/gettinHi.wav");
+			gettingNormal = Content.Load<Song> ("Sound/gettingBack.wav");
 
             spriteBatch = new SpriteBatch(GraphicsDevice);
             TileMap.Initialize(Content.Load<Texture2D>(@"Textures\PlatformTiles"));
@@ -137,24 +137,12 @@ namespace Hi
             GamePadState gamepadState = GamePad.GetState(PlayerIndex.One);
             float elapsed = (float)gameTime.ElapsedGameTime.TotalSeconds;
             if (gameState == GameState.TitleScreen){
-
-               if (keyState.IsKeyDown(Keys.Space) || gamepadState.Buttons.A == ButtonState.Pressed)
-                {
-                    StartNewGame();
-                    gameState = GameState.Playing;
-					//MediaPlayer.Pause ();
-					MediaPlayer.Play (normal);
-                }
-            }
-            if (gameState == GameState.Playing || gameState == GameState.Drugged){
-
-                player.Update(gameTime,false);
-                LevelManager.Update(gameTime,false);
 				if (keyState.IsKeyDown (Keys.Enter) || gamepadState.Buttons.A == ButtonState.Pressed) {
 					switch (menuOptions) {
 					case MenuOptions.Play:
 						StartNewGame ();
 						gameState = GameState.Playing;
+						MediaPlayer.Play (normal);
 						break;
 					case MenuOptions.Instructions:
 						// gameState = GameState.Instructions;
@@ -185,7 +173,6 @@ namespace Hi
 				}
 
 				sec += (float)gameTime.ElapsedGameTime.TotalSeconds;
-				Console.WriteLine (sec);
 
 				if (player.drugged && (!entro && sec > 4.4f)) {
 					MediaPlayer.Pause ();
@@ -218,17 +205,18 @@ namespace Hi
 				}
 
             }
-            if (gameState == GameState.PlayerDead){
+            /*if (gameState == GameState.PlayerDead){
 				MediaPlayer.Pause ();
                 player.Update(gameTime,false);
                 LevelManager.Update(gameTime,false);
-                }
+                }*/
 				if (gameState == GameState.Playing && player.drugged)
 					gameState = GameState.Drugged;
 				else if (gameState == GameState.Drugged && !player.drugged)
 					gameState = GameState.Playing;
             
             if (gameState == GameState.PlayerDead){
+				MediaPlayer.Pause ();
 				player.Update(gameTime, gameState == GameState.Drugged);
 				LevelManager.Update(gameTime, gameState == GameState.Drugged);
 
@@ -237,13 +225,14 @@ namespace Hi
                     player.WorldLocation = Vector2.Zero;
                     LevelManager.ReloadLevel();
                     player.Revive();
-                    gameState = GameState.Playing;
+                    gameState = GameState.Drugged;
                 }
             }
             if (gameState == GameState.GameOver){
                 deathTimer += elapsed;
                 if (deathTimer > deathDelay){
                     gameState = GameState.TitleScreen;
+					player.WorldLocation = Vector2.Zero;
                 }
             }
 			lastPressed = keyState.GetPressedKeys ();
@@ -307,7 +296,8 @@ namespace Hi
             }
             if ((gameState == GameState.Playing) ||
             (gameState == GameState.PlayerDead) ||
-            (gameState == GameState.GameOver))
+            (gameState == GameState.GameOver) ||
+			 gameState == GameState.Drugged)
             {
                 TileMap.Draw(spriteBatch, gameState == GameState.Drugged);
 				player.Draw(spriteBatch);
@@ -331,18 +321,19 @@ namespace Hi
 					myFont.DrawText (spriteBatch, scorePosition, "Drogas: " + player.drogas.ToString ());
 					myFont.DrawText (spriteBatch, inyeccionPosition, "Inyecciones: " + player.inyecciones.ToString ());
 					myFont.DrawText (spriteBatch, livesPosition, "Vidas: " + player.LivesRemaining.ToString ());
+					myFont.DrawText (spriteBatch, new Vector2 (750, 10), (1/(float)(gameTime.ElapsedGameTime.TotalSeconds)).ToString ());
 				}
-                spriteBatch.Draw(Content.Load<Texture2D>(@"Textures\redTexture"), 
+                /*spriteBatch.Draw(Content.Load<Texture2D>(@"Textures\redTexture"), 
                     new Rectangle(600, 10, (int) (player.drugStatus * 1.8), 20),
                     Color.White);
                 spriteBatch.Draw(Content.Load<Texture2D>(@"Textures\greenTexture"),new Rectangle(600,10,180,20),Color.White);
                 //spriteBatch.Draw(Content.Load<Texture2D>(@"Textures\redTexture"), 
                  //   new Rectangle(600, 10, (int) (player.drugStatus * 1.8), 20),
-                 //   Color.White);
+                 //   Color.White);*/
 
             }
 
-            if(gameState == GameState.Drugged){
+            /*if(gameState == GameState.Drugged){
 
                 TileMap.Draw(spriteBatch,player.drugged);
                 player.Draw(spriteBatch);
@@ -363,24 +354,27 @@ namespace Hi
 					myFont.DrawText (spriteBatch, scorePosition, "Drogas: " + player.drogas.ToString ());
 					myFont.DrawText (spriteBatch, inyeccionPosition, "Inyecciones: " + player.inyecciones.ToString ());
 					myFont.DrawText (spriteBatch, livesPosition, "Vidas: " + player.LivesRemaining.ToString ());
+					myFont.DrawText (spriteBatch, new Vector2 (750, 10), 1/(float)(gameTime.ElapsedGameTime.TotalSeconds));
 				}
                 spriteBatch.Draw(Content.Load<Texture2D>(@"Textures\redTexture"),
                     new Rectangle(600, 10, (int)(player.drugStatus * 1.8), 20),
                     Color.White);
                 spriteBatch.Draw(Content.Load<Texture2D>(@"Textures\greenTexture"), new Rectangle(600, 10, 180, 20), Color.White);
-            }
+            }*/
             if (gameState == GameState.PlayerDead)
             {
             }
             if (gameState == GameState.GameOver)
             {
-				try{
+				if(pericles8!= null){
 	                spriteBatch.DrawString(
 	                pericles8,
 	                "G A M E O V E R !",
 	                gameOverPosition,
 	                Color.White);
-				}catch{}
+				}else{
+					myFont.DrawText (spriteBatch, gameOverPosition, "G A M E O V E R !");
+				}
             }
             spriteBatch.End();
             base.Draw(gameTime);
