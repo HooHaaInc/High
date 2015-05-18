@@ -215,6 +215,7 @@ namespace Hi
                 }
             }
             if (gameState == GameState.GameOver){
+                player.Update(gameTime);
                 deathTimer += elapsed;
                 if (deathTimer > deathDelay){
                     gameState = GameState.TitleScreen;
@@ -382,6 +383,9 @@ namespace Hi
 	                "G A M E O V E R !",
 	                gameOverPosition,
 	                Color.White);
+                    spriteBatch.Draw(Content.Load<Texture2D>(@"Textures\greenTexture"), new Rectangle(0, 0,
+                    this.graphics.PreferredBackBufferWidth,
+                    this.graphics.PreferredBackBufferHeight), Color.Black * (deathTimer/5));
 				}catch{}
             }
             if (gameState == GameState.Paused) {

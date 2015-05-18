@@ -152,7 +152,10 @@ namespace Hi
                 if (keyState.IsKeyDown(Keys.E) && lastState.IsKeyUp(Keys.E))
                 {
                     Drug();
-                    if (dead) newAnimation = "die";
+                    if (dead)
+                    {
+                        newAnimation = "die";
+                    }
                 }
 
                 if (newAnimation != currentAnimation)
@@ -175,31 +178,34 @@ namespace Hi
             moveAmount = horizontalCollisionTest(moveAmount);
             moveAmount = verticalCollisionTest(moveAmount);
             AutoMove = Vector2.Zero;
-            if (!onGround)
+            if (!dead)
             {
-                if (currentAnimation == "jump")
+                if (!onGround)
                 {
-                    if (moveAmount.Y > 0 && animations["jump"].signalIndex == 0)
+                    if (currentAnimation == "jump")
                     {
-                        //animations["jump"].nextFrame();
-                        animations["jump"].currentFrame = 7;
-                        animations["jump"].signalIndex = 1;
+                        if (moveAmount.Y > 0 && animations["jump"].signalIndex == 0)
+                        {
+                            //animations["jump"].nextFrame();
+                            animations["jump"].currentFrame = 7;
+                            animations["jump"].signalIndex = 1;
+                        }
+                    }
+                    else
+                    {
+                        if (moveAmount.Y > 0)
+                        {
+                            currentAnimation = "jump";
+                            PlayAnimation("jump");
+                            animations["jump"].currentFrame = 7;
+                            animations["jump"].signalIndex = 1;
+                        }
                     }
                 }
                 else
                 {
-                    if (moveAmount.Y > 0)
-                    {
-                        currentAnimation = "jump";
-                        PlayAnimation("jump");
-                        animations["jump"].currentFrame = 7;
-                        animations["jump"].signalIndex = 1;
-                    }
+                    if (currentAnimation == "jump") if (animations["jump"].signalIndex == 1) animations["jump"].nextFrame();
                 }
-            }
-            else
-            {
-                if (currentAnimation == "jump") if (animations["jump"].signalIndex == 1) animations["jump"].nextFrame();
             }
             Vector2 newPosition = worldLocation + moveAmount;
             newPosition = new Vector2(MathHelper.Clamp(newPosition.X, 0, Camera.WorldRectangle.Width - frameWidth),
@@ -234,10 +240,10 @@ namespace Hi
 
         public void Kill()
         {
-            PlayAnimation("die");
             LivesRemaining--;
             velocity.X = 0;
             dead = true;
+            PlayAnimation("die");
         }
 
         public void Drug()
