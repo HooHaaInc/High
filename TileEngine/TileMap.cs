@@ -202,11 +202,6 @@ namespace TileEngine
                                 (int)((Math.Sin(currentGreen * frequency + Math.PI*4/3) * 127) + 128),
                                 (int)((Math.Sin(currentGreen * frequency + Math.PI * 2) * 127) + 128)
                              );
-								//(float)(Math.Sin(currentGreen*frequency + 0)),
-								//(float)(Math.Sin(currentGreen*frequency + 2)),
-								//(float)(Math.Sin(currentGreen*frequency + 4))
-								//);
-							//currentColor = new Color(100, 255, currentGreen);
 							spriteBatch.Draw(tileSheet, CellScreenRectangle(x, y), TileSourceRectangle(mapCells[x, y].LayerTiles[z]),
 							                 currentColor, rotation, Vector2.Zero, SpriteEffects.None, 1f - ((float)z * 0.1f));
 						}

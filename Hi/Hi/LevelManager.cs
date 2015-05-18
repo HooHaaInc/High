@@ -69,7 +69,7 @@ namespace Hi
                 //@"HiContent/Maps/MAP016.MAP"));// +levelNumber.ToString().PadLeft(3, '0') + ".MAP"));
 
             // vv usen esta en XNA
-            TileMap.LoadMap((System.IO.FileStream)TitleContainer.OpenStream(@"Content/Maps/MAP016.MAP"));
+            TileMap.LoadMap((System.IO.FileStream)TitleContainer.OpenStream(@"Content/Maps/MAP017.MAP"));
 
             drugs.Clear();
             enemies.Clear();
