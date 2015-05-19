@@ -17,7 +17,7 @@ namespace Hi
             frameWidth = 48;
             frameHeight = 48;
             animations.Add("idle",
-                            new AnimationStrip(Content.Load<Texture2D>(@"Textures/drug"), 48, "idle"));
+                            new AnimationStrip(Content.Load<Texture2D>(@"Textures/drug.png"), 48, "idle"));
             animations["idle"].LoopAnimation = true;
             animations["idle"].FrameLength = 0.15f;
             animations["idle"].setSignal(5);
