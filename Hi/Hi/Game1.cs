@@ -75,11 +75,11 @@ namespace Hi
         /// </summary>
         protected override void LoadContent()
         {
-			normal = Content.Load<Song> ("sounds/normal.wav");
-			high = Content.Load<Song> ("sounds/High.wav");
-			gettingHi = Content.Load<Song> ("sounds/gettinHi.wav");
-			gettingNormal = Content.Load<Song> ("sounds/gettingBack.wav");
-			title = Content.Load<Song> ("sounds/titlescreen.wav");
+			normal = Content.Load<Song> (@"sounds/normal.wav");
+			high = Content.Load<Song> (@"sounds/High.wav");
+			gettingHi = Content.Load<Song> (@"sounds/gettinHi.wav");
+			gettingNormal = Content.Load<Song> (@"sounds/gettingBack.wav");
+			title = Content.Load<Song> (@"sounds/titlescreen.wav");
 
             spriteBatch = new SpriteBatch(GraphicsDevice);
             TileMap.Initialize(Content.Load<Texture2D>(@"Textures\PlatformTiles"));
