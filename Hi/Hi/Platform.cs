@@ -138,7 +138,7 @@ namespace Hi
 				movement.X = worldLocation.X + collisionRectangle.Width - rekt.X;
 			}
 
-			Console.Write (movement);
+			//Console.Write (movement);
 			return movement;
 
 

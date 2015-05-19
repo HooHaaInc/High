@@ -56,7 +56,7 @@ namespace Hi
         public Game1()
         {
             graphics = new GraphicsDeviceManager(this);
-            Content.RootDirectory = "Content";
+            Content.RootDirectory = "HiContent";
         }
 
         /// <summary>
@@ -240,7 +240,7 @@ namespace Hi
 					gameState = GameState.Playing;
 				}
 
-            }
+            //}
             /*if (gameState == GameState.PlayerDead){
 				MediaPlayer.Pause ();
                 player.Update(gameTime,false);
@@ -251,8 +251,8 @@ namespace Hi
 				else if (gameState == GameState.Drugged && !player.drugged)
 					gameState = GameState.Playing;
             
-            if (gameState == GameState.PlayerDead){
-				MediaPlayer.Pause ();
+           // if (gameState == GameState.PlayerDead){
+		//		MediaPlayer.Pause ();
                 if (keyState.IsKeyDown(Keys.Escape) && lastState.IsKeyUp(Keys.Escape))
                 {
                     lastGameState = gameState;
@@ -334,12 +334,12 @@ namespace Hi
 						Color.Red);
                     spriteBatch.Draw(titleScreen, Vector2.Zero, Color.White);
 				} else {
-                    /*
+                    
 					myFont.DrawText (spriteBatch, menuPositions [0], "Jugar");
 					myFont.DrawText (spriteBatch, menuPositions [1], "Instrucciones");
 					myFont.DrawText (spriteBatch, menuPositions [2], "Salir");
 					myFont.DrawText (spriteBatch, menuPositions [(int)menuOptions] - new Vector2 (10, 0), ">");
-                     */
+                     
 				}
             }
             if (gameState == GameState.Help) { 
@@ -347,17 +347,17 @@ namespace Hi
                 switch(helpIndex){
 
                     case (0): {
-                        spriteBatch.Draw(Content.Load<Texture2D>(@"Textures\HelpMenus\HelpMenu2"), Vector2.Zero, Color.White);
+                        spriteBatch.Draw(Content.Load<Texture2D>(@"Textures\HelpMenus\HelpMenu1"), Vector2.Zero, Color.White);
                         break;
                     }
                     case (1):
                         {
-                            spriteBatch.Draw(Content.Load<Texture2D>(@"Textures\HelpMenus\HelpMenu1"), Vector2.Zero, Color.White);
+                            spriteBatch.Draw(Content.Load<Texture2D>(@"Textures\HelpMenus\HelpMenu2"), Vector2.Zero, Color.White);
                             break;
                     }
                     case (2):
                         {
-                            spriteBatch.Draw(Content.Load<Texture2D>(@"Textures\HelpMenus\HelpMenu1"), Vector2.Zero, Color.White);
+                            spriteBatch.Draw(Content.Load<Texture2D>(@"Textures\HelpMenus\HelpMenu3"), Vector2.Zero, Color.White);
                             break;
                     }
 

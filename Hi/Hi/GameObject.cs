@@ -94,7 +94,7 @@ namespace Hi
         {
             if (!(name == null) && animations.ContainsKey(name))
             {
-                Console.WriteLine("Esta "+name);
+                //Console.WriteLine("Esta "+name);
                 currentAnimation = name;
                 animations[name].Play();
             }
