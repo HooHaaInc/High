@@ -8,43 +8,50 @@ using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Input;
 using TileEngine;
 
-namespace Hi {
-    public class Player : GameObject {
+namespace Hi
+{
+    public class Player : GameObject
+    {
         private Vector2 fallSpeed = new Vector2(0, 15);
         private float moveScale = 180.0f;
         private Vector2 lastMove;
         private bool dead = false;
-        public int drogas = 0;
+        public int drugCount = 0;
         public bool drugged = false;
         private int score = 0;
         private int livesRemaining = 3;
         public int inyecciones = 3;
         public int drugStatus = 0;
         KeyboardState lastState;
+        public bool paused = false;
 
-        public bool Dead {
+        public bool Dead
+        {
             get { return dead; }
         }
 
-        public int Score {
+        public int Score
+        {
             get { return score; }
             set { score = value; }
         }
 
-        public int LivesRemaining {
+        public int LivesRemaining
+        {
             get { return livesRemaining; }
             set { livesRemaining = value; }
         }
 
 
         #region Constructor
-        public Player(ContentManager content) {
-            animations.Add("idle",new AnimationStrip( content.Load<Texture2D>(@"Textures\Sprites\Player\Idle"),48,"idle")  );
+        public Player(ContentManager content)
+        {
+            animations.Add("idle", new AnimationStrip(content.Load<Texture2D>(@"Textures\Sprites\Player\Idle"), 48, "idle"));
 
             animations["idle"].LoopAnimation = true;
             animations["idle"].setSignal(2);
 
-            animations.Add("run", new AnimationStrip( content.Load<Texture2D>(@"Textures\Sprites\Player\Run"),48,"run"));
+            animations.Add("run", new AnimationStrip(content.Load<Texture2D>(@"Textures\Sprites\Player\Run"), 48, "run"));
             animations["run"].LoopAnimation = true;
             animations["run"].FrameLength = 0.1f;
             animations["run"].setSignal(11);
@@ -60,7 +67,7 @@ namespace Hi {
 
             animations["jump"].setSignal(4);
             animations["jump"].setSignal(7);
-          //  animations["jump"].setSignal(8);
+            //  animations["jump"].setSignal(8);
 
             animations.Add("die",
                 new AnimationStrip(
@@ -69,7 +76,7 @@ namespace Hi {
                     "die"));
             animations["die"].LoopAnimation = false;
             animations["die"].setSignal(15);
-
+            animations["die"].FrameLength = .1f;
             frameWidth = 48;
             frameHeight = 48;
             CollisionRectangle = new Rectangle(9, 1, 23, 46);
@@ -83,43 +90,57 @@ namespace Hi {
         #endregion
 
         #region Public Methods
-        public override void Update(GameTime gameTime, bool drugged) {
-            if (!Dead) {
+        public override void Update(GameTime gameTime)
+        {
+            KeyboardState keyState = Keyboard.GetState();
+            //if (keyState.IsKeyDown(Keys.Escape) && lastState.IsKeyUp(Keys.Escape) ) paused = !paused;
+          //  if (paused)
+            {
+            //    lastState = keyState;
+           //     return;
+            }
+            if (!Dead)
+            {
                 string newAnimation = "idle";
 
                 velocity = new Vector2(0, velocity.Y);
                 GamePadState gamePad = GamePad.GetState(PlayerIndex.One);
-                KeyboardState keyState = Keyboard.GetState();
                 if (keyState.IsKeyDown(Keys.Q) && lastState.IsKeyUp(Keys.Q)) Clean();
                 if (keyState.IsKeyDown(Keys.Left) ||
-				    keyState.IsKeyDown(Keys.A)) {
+                    keyState.IsKeyDown(Keys.A))
+                {
                     flipped = false;
                     newAnimation = "run";
                     velocity = new Vector2(-moveScale, velocity.Y);
                 }
 
                 if (keyState.IsKeyDown(Keys.Right) ||
-                    keyState.IsKeyDown (Keys.D)) {
+                    keyState.IsKeyDown(Keys.D))
+                {
                     flipped = true;
                     newAnimation = "run";
                     velocity = new Vector2(moveScale, velocity.Y);
                 }
 
                 if (keyState.IsKeyDown(Keys.Space) ||
-                    (gamePad.Buttons.A == ButtonState.Pressed)) {
-                    if (onGround) {
+                    (gamePad.Buttons.A == ButtonState.Pressed))
+                {
+                    if (onGround)
+                    {
                         Jump();
                         newAnimation = "jump";
                     }
                 }
 
                 if (keyState.IsKeyDown(Keys.Up) ||
-				    keyState.IsKeyDown(Keys.W)) {
+                    keyState.IsKeyDown(Keys.W))
+                {
                     checkLevelTransition();
                 }
 
 
-                if (currentAnimation == "jump"){
+                if (currentAnimation == "jump")
+                {
                     newAnimation = "jump";
                 }
 
@@ -131,46 +152,60 @@ namespace Hi {
                 if (keyState.IsKeyDown(Keys.E) && lastState.IsKeyUp(Keys.E))
                 {
                     Drug();
-                    if (dead) newAnimation = "die";
+                    if (dead)
+                    {
+                        newAnimation = "die";
+                    }
                 }
 
-                if (newAnimation != currentAnimation) {
+                if (newAnimation != currentAnimation)
+                {
                     PlayAnimation(newAnimation);
                 }
                 lastState = keyState;
             }
-			float elapsed = (float)gameTime.ElapsedGameTime.TotalSeconds;
+            float elapsed = (float)gameTime.ElapsedGameTime.TotalSeconds;
             velocity += fallSpeed * 60 * elapsed;
 
             repositionCamera();
             //base.Update(gameTime, true);
 
             if (!enabled) return;
-            
+
             updateAnimation(gameTime);
             if (velocity.Y != 0) onGround = false;
             Vector2 moveAmount = velocity * elapsed + AutoMove;
             moveAmount = horizontalCollisionTest(moveAmount);
             moveAmount = verticalCollisionTest(moveAmount);
-			AutoMove = Vector2.Zero;
-            if (!onGround)
+            AutoMove = Vector2.Zero;
+            if (!dead)
             {
-                if (currentAnimation == "jump")
+                if (!onGround)
                 {
-                    if (moveAmount.Y > 0 && animations["jump"].signalIndex == 0) animations["jump"].nextFrame();
-                }
-                else {
-                    if (moveAmount.Y > 0)
+                    if (currentAnimation == "jump")
                     {
-                        currentAnimation = "jump";
-                        PlayAnimation("jump");
-                        animations["jump"].currentFrame = 7;
-                        animations["jump"].signalIndex = 1;
+                        if (moveAmount.Y > 0 && animations["jump"].signalIndex == 0)
+                        {
+                            //animations["jump"].nextFrame();
+                            animations["jump"].currentFrame = 7;
+                            animations["jump"].signalIndex = 1;
+                        }
+                    }
+                    else
+                    {
+                        if (moveAmount.Y > 0)
+                        {
+                            currentAnimation = "jump";
+                            PlayAnimation("jump");
+                            animations["jump"].currentFrame = 7;
+                            animations["jump"].signalIndex = 1;
+                        }
                     }
                 }
-            }
-            else {
-                if (currentAnimation == "jump") if(animations["jump"].signalIndex == 1) animations["jump"].nextFrame();
+                else
+                {
+                    if (currentAnimation == "jump") if (animations["jump"].signalIndex == 1) animations["jump"].nextFrame();
+                }
             }
             Vector2 newPosition = worldLocation + moveAmount;
             newPosition = new Vector2(MathHelper.Clamp(newPosition.X, 0, Camera.WorldRectangle.Width - frameWidth),
@@ -181,80 +216,95 @@ namespace Hi {
 
 
 
-        public void Clean() {
+        public void Clean()
+        {
+            if (!drugged) return;
             if (inyecciones > 0)
             {
                 inyecciones--;
                 drugStatus -= 30;
                 if (drugStatus < 0)
                 {
+                    LevelManager.toggleDrugged();
                     drugged = false;
                     drugStatus = 0;
                 }
             }
         }
-        public void Jump() {
+        public void Jump()
+        {
             velocity.Y = -400;
             animations["jump"].signalIndex = 0;
             PlayAnimation("jump");
         }
 
-        public void Kill() {
-            PlayAnimation("die");
+        public void Kill()
+        {
             LivesRemaining--;
             velocity.X = 0;
             dead = true;
+            PlayAnimation("die");
         }
 
-        public void Drug() {
-            if (drogas > 0)
+        public void Drug()
+        {
+            if (drugCount > 0)
             {
+                if (drugStatus == 0) LevelManager.toggleDrugged();
                 drugged = true;
-                drogas--;
-                //Random random = new Random();
-                int percentage = 40;// random.Next(40, 40);
+                drugCount--;
+                Random random = new Random();
+                int percentage = 40;
                 drugStatus += percentage;
                 if (drugStatus > 100) Kill();
-               // drugStatus = 0;
             }
         }
         public void Revive()
         {
+            drugCount = 0;
+            inyecciones = 3;
             PlayAnimation("idle");
             dead = false;
 			drugged = false;
-			drogas = 0;
+			drugCount = 0;
 			inyecciones = 3;
 			drugStatus = 0;
         }
         #endregion
 
         #region Helper Methods
-        private void repositionCamera() {
+        private void repositionCamera()
+        {
             int screenLocX = (int)Camera.WorldToScreen(worldLocation).X;
 
-            if (screenLocX > 500) {
+            if (screenLocX > 500)
+            {
                 Camera.Move(new Vector2(screenLocX - 500, 0));
             }
 
-            if (screenLocX < 200) {
+            if (screenLocX < 200)
+            {
                 Camera.Move(new Vector2(screenLocX - 200, 0));
             }
 
-			int screenLocY = (int)Camera.WorldToScreen(worldLocation).Y;
+            int screenLocY = (int)Camera.WorldToScreen(worldLocation).Y;
 
-			if (screenLocY > 250) {
-				Camera.Move(new Vector2(0, screenLocY - 250));
-			}
+            if (screenLocY > 300)
+            {
+                Camera.Move(new Vector2(0, screenLocY - 300));
+            }
 
-			if (screenLocY < 150) {
-				Camera.Move(new Vector2(0, screenLocY - 150));
-			}
+            if (screenLocY < 200/*< 200*/)
+            {
+                Camera.Move(new Vector2(0, screenLocY - 200));
+            }
         }
 
-        private void checkLevelTransition() {
+        private void checkLevelTransition()
+        {
             Vector2 centerCell = TileMap.GetCellByPixel(WorldCenter);
-            if (TileMap.CellCodeValue(centerCell).StartsWith("T_")) {
+            if (TileMap.CellCodeValue(centerCell).StartsWith("T_"))
+            {
                 string[] code = TileMap.CellCodeValue(centerCell).Split('_');
 
                 if (code.Length != 4)
@@ -272,7 +322,8 @@ namespace Hi {
             }
         }
 
-        public void setOnGround(bool onGround) {
+        public void setOnGround(bool onGround)
+        {
             this.onGround = onGround;
         }
         #endregion

@@ -21,6 +21,7 @@ namespace Hi
         private static List<Drug> drugs = new List<Drug>();
         private static List<Enemy> enemies = new List<Enemy>();
         private static List<Platform> platforms = new List<Platform>();
+        private static List<MapSquare> passableSquares = new List<MapSquare>();
         #endregion
 
         #region Properties
@@ -62,8 +63,13 @@ namespace Hi
         #region Public Methods
         public static void LoadLevel(int levelNumber)
         {
-            TileMap.LoadMap((System.IO.FileStream)TitleContainer.OpenStream(
-                @"HiContent/Maps/MAP016.MAP"));// +levelNumber.ToString().PadLeft(3, '0') + ".MAP"));
+
+            // vv usen esta en monodevelop
+            //TileMap.LoadMap((System.IO.FileStream)TitleContainer.OpenStream(
+                //@"HiContent/Maps/MAP016.MAP"));// +levelNumber.ToString().PadLeft(3, '0') + ".MAP"));
+
+            // vv usen esta en XNA
+            TileMap.LoadMap((System.IO.FileStream)TitleContainer.OpenStream(@"Content/Maps/MAP017.MAP"));
 
             drugs.Clear();
             enemies.Clear();
@@ -74,24 +80,27 @@ namespace Hi
                 for (int y = 0; y < TileMap.MapHeight; y++)
                 {
 					switch(TileMap.CellCodeValue (x, y)){
-					case "START":
-						player.WorldLocation = new Vector2 (
-							x * TileMap.TileWidth,
-							y * TileMap.TileHeight);
-						break;
-					case "DRUG":
-						drugs.Add (new Drug (Content, x, y));
-						break;
-					case "ENEMY":
-					case "CHAIR":
-						enemies.Add (new Enemy (Content, x, y, 1));
-						break;
-					case "POT":
-						enemies.Add (new Enemy (Content, x, y, 2));
-						break;
-					case "PLATFORM":
-						platforms.Add (new Platform (Content, x, y));
-						break;
+					    case "START":
+						    player.WorldLocation = new Vector2 (
+							    x * TileMap.TileWidth,
+							    y * TileMap.TileHeight);
+						    break;
+					    case "DRUG":
+						    drugs.Add (new Drug (Content, x, y));
+						    break;
+					    case "ENEMY":
+					    case "CHAIR":
+						    enemies.Add (new Enemy (Content, x, y, 1));
+						    break;
+					    case "POT":
+						    enemies.Add (new Enemy (Content, x, y, 2));
+						    break;
+					    case "PLATFORM":
+						    platforms.Add (new Platform (Content, x, y));
+						    break;
+                        case "DRUGPASS":
+                            passableSquares.Add(TileMap.GetMapSquareAtCell(x,y));
+                            break;
 					}
 
                     /*if (TileMap.CellCodeValue(x, y) == "START")
@@ -142,22 +151,22 @@ namespace Hi
                 checkCurrentCellCode(); 
 
 				for (int i=0; i<platforms.Count (); ++i)
-					platforms [i].Update (gameTime, drugged);
+					platforms [i].Update (gameTime);
 
                 for (int x = drugs.Count - 1; x >= 0; x--)
                 {
-					drugs[x].Update(gameTime, drugged);
+					drugs[x].Update(gameTime);
                     if (player.CollisionRectangle.Intersects(
                         drugs[x].CollisionRectangle))
                     {
                         drugs.RemoveAt(x);
-                        player.drogas++;
+                        player.drugCount++;
                     }
                 }
 
                 for (int x = enemies.Count - 1; x >= 0; x--)
                 {
-					enemies[x].Update(gameTime, drugged);
+					enemies[x].Update(gameTime);
                     if (!enemies[x].Dead && drugged)
                     {
                         if (player.CollisionRectangle.Intersects(
@@ -206,6 +215,18 @@ namespace Hi
 			}
 			return null;
 		}
+
+         public static void toggleDrugged() {
+           // foreach (Drug gem in drugs)
+              //  gem.toggleDrugged();
+
+            foreach (Enemy enemy in enemies)
+                enemy.toggleDrugged();
+            foreach (Platform platform in platforms)
+                platform.toggleDrugged();
+            foreach (MapSquare mapsquare in passableSquares)
+                mapsquare.TogglePassable();
+        }
 
         #endregion
 

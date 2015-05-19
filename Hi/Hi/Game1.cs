@@ -9,7 +9,7 @@ using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using Microsoft.Xna.Framework.Media;
 using TileEngine;
-using BMFont;
+using BmFont;
 
 namespace Hi
 {
@@ -25,7 +25,7 @@ namespace Hi
         SpriteFont pericles8;
 		Song normal,high,gettingHi,gettingNormal;
         Vector2 scorePosition = new Vector2(20, 10);
-        enum GameState { TitleScreen, Playing, PlayerDead, GameOver, Drugged };
+        enum GameState { TitleScreen, Playing, PlayerDead, GameOver, Drugged, Help, Paused };
 		enum MenuOptions { Play = 0, Instructions, Exit };
         GameState gameState = GameState.TitleScreen;
 		MenuOptions menuOptions = MenuOptions.Play;
@@ -37,6 +37,7 @@ namespace Hi
 			new Vector2(350, 320),
 			new Vector2(350, 340)
 		};
+        int helpIndex = 0;
         Texture2D titleScreen;
         float deathTimer = 0.0f;
         float deathDelay = 5.0f;
@@ -46,13 +47,16 @@ namespace Hi
 
 		BitFont myFont;
 		Keys[] lastPressed;
+		//BitFont myFont;
+		KeyboardState lastState;
+        GameState lastGameState;
 		#endregion
 
 
         public Game1()
         {
             graphics = new GraphicsDeviceManager(this);
-            Content.RootDirectory = "HiContent";
+            Content.RootDirectory = "Content";
         }
 
         /// <summary>
@@ -65,7 +69,7 @@ namespace Hi
         {
             // TODO: Add your initialization logic here
             this.graphics.PreferredBackBufferWidth = 800;
-            this.graphics.PreferredBackBufferHeight = 400;
+            this.graphics.PreferredBackBufferHeight = 500;
             this.graphics.ApplyChanges();
             base.Initialize();
         }
@@ -95,7 +99,7 @@ namespace Hi
             TileMap.TileWidth);
             Camera.Position = Vector2.Zero;
             Camera.ViewPortWidth = 800;
-            Camera.ViewPortHeight = 400;
+            Camera.ViewPortHeight = 600;
             player = new Player(Content);
             LevelManager.Initialize(Content, player);
             /*
@@ -130,12 +134,23 @@ namespace Hi
         /// <param name="gameTime">Provides a snapshot of timing values.</param>
         protected override void Update(GameTime gameTime)
         {
+
             // Allows the game to exit
             //if (GamePad.GetState(PlayerIndex.One).Buttons.Back ==ButtonState.Pressed)
             //this.Exit();
             KeyboardState keyState = Keyboard.GetState();
             GamePadState gamepadState = GamePad.GetState(PlayerIndex.One);
+
             float elapsed = (float)gameTime.ElapsedGameTime.TotalSeconds;
+            if (gameState == GameState.Paused) {
+                if (keyState.IsKeyDown(Keys.Escape) && lastState.IsKeyUp(Keys.Escape))
+                {
+                    gameState = lastGameState;
+                    lastState = keyState;
+                    base.Update(gameTime);
+                    return;
+                }
+            }
             if (gameState == GameState.TitleScreen){
 				if (keyState.IsKeyDown (Keys.Enter) || gamepadState.Buttons.A == ButtonState.Pressed) {
 					switch (menuOptions) {
@@ -145,22 +160,43 @@ namespace Hi
 						MediaPlayer.Play (normal);
 						break;
 					case MenuOptions.Instructions:
-						// gameState = GameState.Instructions;
+						 gameState = GameState.Help;
+                         helpIndex = 0;
 						break;
 					case MenuOptions.Exit:
 						Exit ();
 						break;
 					}
-				} else if (keyState.IsKeyDown (Keys.Down) && !lastPressed.Contains (Keys.Down) || 
-				           keyState.IsKeyDown (Keys.S) && !lastPressed.Contains (Keys.S)) {
+				} else if (keyState.IsKeyDown (Keys.Down) && lastState.IsKeyUp(Keys.Down) || 
+				           keyState.IsKeyDown (Keys.S) && lastState.IsKeyUp(Keys.S)) {
 					if (menuOptions != MenuOptions.Exit)
 						++menuOptions;
-				}else if(keyState.IsKeyDown (Keys.Up) && !lastPressed.Contains (Keys.Up)
-				         || keyState.IsKeyDown (Keys.W) && !lastPressed.Contains (Keys.W))
+				}else if(keyState.IsKeyDown (Keys.Up) && lastState.IsKeyUp(Keys.Up)
+				         || keyState.IsKeyDown (Keys.W) && lastState.IsKeyUp(Keys.W))
 					if(menuOptions != MenuOptions.Play) --menuOptions;
             }
+            if (gameState == GameState.Help) {
+                if (keyState.IsKeyDown(Keys.D) && lastState.IsKeyUp(Keys.D) ||
+                    keyState.IsKeyDown(Keys.Right) && lastState.IsKeyUp(Keys.Right) )
+                {
+                    helpIndex++;
+                    if (helpIndex == 3) gameState = GameState.TitleScreen;
+                   
+                }
+                if (keyState.IsKeyDown(Keys.A) && lastState.IsKeyUp(Keys.A) ||
+                    keyState.IsKeyDown(Keys.Left) && lastState.IsKeyUp(Keys.Left) )
+                {
+                    helpIndex--;
+                    if (helpIndex == -1) gameState = GameState.TitleScreen;
+
+                }
+                 if (keyState.IsKeyDown(Keys.Escape) && lastState.IsKeyUp(Keys.Escape)){
+                    gameState = GameState.TitleScreen;
+                 }
+            
+            }
             if (gameState == GameState.Playing || gameState == GameState.Drugged){
-				player.Update(gameTime, gameState == GameState.Drugged);
+				player.Update(gameTime);
 				LevelManager.Update(gameTime, gameState == GameState.Drugged);
                 if (player.Dead){
                     if (player.LivesRemaining > 0){
@@ -217,7 +253,14 @@ namespace Hi
             
             if (gameState == GameState.PlayerDead){
 				MediaPlayer.Pause ();
-				player.Update(gameTime, gameState == GameState.Drugged);
+                if (keyState.IsKeyDown(Keys.Escape) && lastState.IsKeyUp(Keys.Escape))
+                {
+                    lastGameState = gameState;
+                    gameState = GameState.Paused;
+                }
+            }
+            if (gameState == GameState.PlayerDead){
+				player.Update(gameTime);
 				LevelManager.Update(gameTime, gameState == GameState.Drugged);
 
                 deathTimer += elapsed;
@@ -229,13 +272,14 @@ namespace Hi
                 }
             }
             if (gameState == GameState.GameOver){
+                player.Update(gameTime);
                 deathTimer += elapsed;
                 if (deathTimer > deathDelay){
                     gameState = GameState.TitleScreen;
 					player.WorldLocation = Vector2.Zero;
                 }
             }
-			lastPressed = keyState.GetPressedKeys ();
+			lastState = keyState;
 
             base.Update(gameTime);
             /*
@@ -248,6 +292,7 @@ namespace Hi
             player.Update(gameTime);
             LevelManager.Update(gameTime);
             base.Update(gameTime);*/
+            //lastState = keyState;
         }
 
         /// <summary>
@@ -262,50 +307,75 @@ namespace Hi
             BlendState.AlphaBlend);
             if (gameState == GameState.TitleScreen)
             {
-                spriteBatch.Draw(titleScreen, Vector2.Zero, Color.White);
+                //spriteBatch.Draw(titleScreen, Vector2.Zero, Color.White);
 				if (pericles8 != null) {
 					spriteBatch.DrawString (
 						pericles8,
-						"Jugar",
+						"JUGAR         ",
 						menuPositions[0],
-						Color.White);
+						Color.Red);
 
 					//spriteBatch.DrawString(pericles8, "Current green" + TileMap.currentGreen.ToString(), new Vector2(20, 70), Color.White);
 					//spriteBatch.DrawString(pericles8, "Color: " + TileMap.currentColor.ToString(), new Vector2(20, 50), Color.White);
 					spriteBatch.DrawString (
 						pericles8, 
-						"Instrucciones", 
+						"INSTRUCCIONES           ", 
 						menuPositions[1], 
-						Color.White);
+						Color.Red);
 					spriteBatch.DrawString (
 						pericles8,
-						"Salir",
+						"SALIR                ",
 						menuPositions[2],
-						Color.White);
+						Color.Red);
 					spriteBatch.DrawString (
 						pericles8,
 						">",
 						menuPositions[(int)menuOptions] - new Vector2 (10, 0),
-						Color.White);
+						Color.Red);
+                    spriteBatch.Draw(titleScreen, Vector2.Zero, Color.White);
 				} else {
+                    /*
 					myFont.DrawText (spriteBatch, menuPositions [0], "Jugar");
 					myFont.DrawText (spriteBatch, menuPositions [1], "Instrucciones");
 					myFont.DrawText (spriteBatch, menuPositions [2], "Salir");
 					myFont.DrawText (spriteBatch, menuPositions [(int)menuOptions] - new Vector2 (10, 0), ">");
+                     */
 				}
             }
+            if (gameState == GameState.Help) { 
+                
+                switch(helpIndex){
+
+                    case (0): {
+                        spriteBatch.Draw(Content.Load<Texture2D>(@"Textures\HelpMenus\HelpMenu2"), Vector2.Zero, Color.White);
+                        break;
+                    }
+                    case (1):
+                        {
+                            spriteBatch.Draw(Content.Load<Texture2D>(@"Textures\HelpMenus\HelpMenu1"), Vector2.Zero, Color.White);
+                            break;
+                    }
+                    case (2):
+                        {
+                            spriteBatch.Draw(Content.Load<Texture2D>(@"Textures\HelpMenus\HelpMenu1"), Vector2.Zero, Color.White);
+                            break;
+                    }
+
+                }
+            }
             if ((gameState == GameState.Playing) ||
+                (gameState == GameState.Drugged) ||
             (gameState == GameState.PlayerDead) ||
             (gameState == GameState.GameOver) ||
-			 gameState == GameState.Drugged)
+                gameState == GameState.Paused)
             {
-                TileMap.Draw(spriteBatch, gameState == GameState.Drugged);
+                TileMap.Draw(spriteBatch,player.drugged);
 				player.Draw(spriteBatch);
 				LevelManager.Draw(spriteBatch);
 				if(pericles8 != null){
 	                spriteBatch.DrawString(
 	                pericles8,
-	                "Drogas: " + player.drogas.ToString(),
+	                "Drogas: " + player.drugCount.ToString(),
 	                scorePosition,
 	                Color.White);
 
@@ -318,7 +388,7 @@ namespace Hi
 	                livesPosition,
 	                Color.White);
 				}else{
-					myFont.DrawText (spriteBatch, scorePosition, "Drogas: " + player.drogas.ToString ());
+					myFont.DrawText (spriteBatch, scorePosition, "Drogas: " + player.drugCount.ToString ());
 					myFont.DrawText (spriteBatch, inyeccionPosition, "Inyecciones: " + player.inyecciones.ToString ());
 					myFont.DrawText (spriteBatch, livesPosition, "Vidas: " + player.LivesRemaining.ToString ());
 					myFont.DrawText (spriteBatch, new Vector2 (750, 10), (1/(float)(gameTime.ElapsedGameTime.TotalSeconds)).ToString ());
@@ -326,7 +396,15 @@ namespace Hi
                 /*spriteBatch.Draw(Content.Load<Texture2D>(@"Textures\redTexture"), 
                     new Rectangle(600, 10, (int) (player.drugStatus * 1.8), 20),
                     Color.White);
+					//myFont.DrawText (spriteBatch, scorePosition, "Drogas: " + player.drogas.ToString ());
+					//myFont.DrawText (spriteBatch, inyeccionPosition, "Inyecciones: " + player.inyecciones.ToString ());
+					//myFont.DrawText (spriteBatch, livesPosition, "Vidas: " + player.LivesRemaining.ToString ());
+				}
+
                 spriteBatch.Draw(Content.Load<Texture2D>(@"Textures\greenTexture"),new Rectangle(600,10,180,20),Color.White);
+                spriteBatch.Draw(Content.Load<Texture2D>(@"Textures\redTexture"),
+                    new Rectangle(600, 10, (int)(player.drugStatus * 1.8), 20),
+                    Color.White);
                 //spriteBatch.Draw(Content.Load<Texture2D>(@"Textures\redTexture"), 
                  //   new Rectangle(600, 10, (int) (player.drugStatus * 1.8), 20),
                  //   Color.White);*/
@@ -335,13 +413,14 @@ namespace Hi
 
             /*if(gameState == GameState.Drugged){
 
+           /* if(gameState == GameState.Drugged){
                 TileMap.Draw(spriteBatch,player.drugged);
                 player.Draw(spriteBatch);
                 LevelManager.Draw(spriteBatch);
                 if(pericles8 != null){
 					spriteBatch.DrawString(
 	                pericles8,
-	                "Drogas: " + player.drogas.ToString(),
+	                "Drogas: " + player.drugCount.ToString(),
 	                scorePosition,
 	                Color.White);
 	                spriteBatch.DrawString(pericles8, "Inyecciones: " + player.inyecciones.ToString(), inyeccionPosition, Color.White);
@@ -355,11 +434,16 @@ namespace Hi
 					myFont.DrawText (spriteBatch, inyeccionPosition, "Inyecciones: " + player.inyecciones.ToString ());
 					myFont.DrawText (spriteBatch, livesPosition, "Vidas: " + player.LivesRemaining.ToString ());
 					myFont.DrawText (spriteBatch, new Vector2 (750, 10), 1/(float)(gameTime.ElapsedGameTime.TotalSeconds));
+					//myFont.DrawText (spriteBatch, scorePosition, "Drogas: " + player.drogas.ToString ());
+					//myFont.DrawText (spriteBatch, inyeccionPosition, "Inyecciones: " + player.inyecciones.ToString ());
+					//myFont.DrawText (spriteBatch, livesPosition, "Vidas: " + player.LivesRemaining.ToString ());
+>>>>>>> 974d6c8fbb75a6213bb97aae8e84016bc4f88c5f
 				}
                 spriteBatch.Draw(Content.Load<Texture2D>(@"Textures\redTexture"),
                     new Rectangle(600, 10, (int)(player.drugStatus * 1.8), 20),
                     Color.White);
                 spriteBatch.Draw(Content.Load<Texture2D>(@"Textures\greenTexture"), new Rectangle(600, 10, 180, 20), Color.White);
+<<<<<<< HEAD
             }*/
             if (gameState == GameState.PlayerDead)
             {
@@ -375,6 +459,12 @@ namespace Hi
 				}else{
 					myFont.DrawText (spriteBatch, gameOverPosition, "G A M E O V E R !");
 				}
+            }
+            if (gameState == GameState.Paused) {
+                spriteBatch.Draw(Content.Load<Texture2D>(@"Textures\greenTexture"), new Rectangle(0, 0,
+                    this.graphics.PreferredBackBufferWidth,
+                    this.graphics.PreferredBackBufferHeight), Color.Black * 0.5f);
+                spriteBatch.DrawString(pericles8, "PAUSA", new Vector2(370, 140), Color.White);
             }
             spriteBatch.End();
             base.Draw(gameTime);

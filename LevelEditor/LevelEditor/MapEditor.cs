@@ -103,7 +103,10 @@ namespace LevelEditor
             cboCodeValues.Items.Clear();
             cboCodeValues.Items.Add("Drug");
             cboCodeValues.Items.Add("Enemy");
+            cboCodeValues.Items.Add("Pot");
+            cboCodeValues.Items.Add("Chair");
             cboCodeValues.Items.Add("Lethal");
+            cboCodeValues.Items.Add("DrugPassable");
             cboCodeValues.Items.Add("EnemyBlocking");
             cboCodeValues.Items.Add("Platform");
             cboCodeValues.Items.Add("Start");
@@ -143,8 +146,17 @@ namespace LevelEditor
                 case "Enemy" :
                     txtNewCode.Text = "ENEMY";
                     break;
+                case "Pot":
+                    txtNewCode.Text = "POT";
+                    break;
+                case "Chair":
+                    txtNewCode.Text = " CHAIR";
+                    break;
                 case "Lethal" :
                     txtNewCode.Text = "DEAD";
+                    break;
+                case "DrugPassable":
+                    txtNewCode.Text = "DRUGPASS";
                     break;
                 case "EnemyBlocking":
                     txtNewCode.Text = "BLOCK";

@@ -27,7 +27,7 @@ namespace Hi {
 				animations.Add ("idle",
 				                new AnimationStrip (
 					content.Load<Texture2D> (
-					@"Textures\Sprites\MonsterA\silla"),
+					@"Textures\Sprites\MonsterA\Idle"),
 					48,
 					"idle"));
 				animations ["idle"].LoopAnimation = true;
@@ -118,10 +118,10 @@ namespace Hi {
         #endregion
 
         #region Public Methods
-        public override void Update(GameTime gameTime, bool drugged) {
+        public override void Update(GameTime gameTime) {
             Vector2 oldLocation = worldLocation;
 
-            if (!Dead && drugged) {
+            if (!Dead && objectState == ObjectStates.Drugged) {
                 velocity = new Vector2(0, velocity.Y);
 
                 Vector2 direction = new Vector2(1, 0);
@@ -137,8 +137,8 @@ namespace Hi {
                 velocity += fallSpeed;
             }
 
-            base.Update(gameTime, drugged);
-			if (!drugged) {
+            base.Update(gameTime);
+			if (objectState == ObjectStates.Normal) {
 				currentAnimation = "idle";
 				return;
 			} else

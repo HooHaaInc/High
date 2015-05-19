@@ -30,6 +30,8 @@ namespace Hi
 		protected Vector2 autoMove;
 		protected Vector2 defaultLocation;
 		protected Texture2D rekt = null;
+        protected enum ObjectStates { Normal, Drugged };
+        protected ObjectStates objectState = ObjectStates.Normal;
 
         #endregion
 
@@ -92,16 +94,17 @@ namespace Hi
         {
             if (!(name == null) && animations.ContainsKey(name))
             {
+                Console.WriteLine("Esta "+name);
                 currentAnimation = name;
                 animations[name].Play();
             }
         }
 
-        public virtual void Update(GameTime gameTime, bool drugged)
+        public virtual void Update(GameTime gameTime)
         {
             if (!enabled) return;
 			Vector2 newPosition;
-			if(!drugged){
+			if(objectState == ObjectStates.Normal){
 				newPosition = defaultLocation;
 				newPosition = new Vector2(MathHelper.Clamp(newPosition.X, 0, Camera.WorldRectangle.Width - frameWidth),
 				                          MathHelper.Clamp(newPosition.Y, 2 * (-TileMap.TileHeight), Camera.WorldRectangle.Height - frameHeight));
@@ -138,6 +141,11 @@ namespace Hi
 				rekt,
 				Camera.WorldToScreen (CollisionRectangle),
 				Color.Green);
+        }
+
+        public void toggleDrugged() {
+            if (objectState == ObjectStates.Normal) objectState = ObjectStates.Drugged;
+            else objectState = ObjectStates.Normal;
         }
         #endregion
         #region Map-Based Collision Detection Methods
