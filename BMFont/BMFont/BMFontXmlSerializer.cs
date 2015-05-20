@@ -9,7 +9,7 @@ using System.Xml.Serialization;
 using System.Collections.Generic;
 using Microsoft.Xna.Framework;
 
-namespace BmFont
+namespace BMFont
 {
 	[Serializable]
 	[XmlRoot ( "font" )]
@@ -354,7 +354,7 @@ namespace BmFont
 		public static FontFile Load ( String filename )
 		{
 			XmlSerializer deserializer = new XmlSerializer ( typeof ( FontFile ) );
-			TextReader textReader = new StreamReader ( filename );
+			TextReader textReader = new StreamReader (filename);
 			FontFile file = ( FontFile ) deserializer.Deserialize ( textReader );
 			textReader.Close ( );
 			return file;

@@ -11,6 +11,10 @@ LevelEditor/LevelEditor/gtk-gui
 LevelEditor/LevelEditor/Properties
 LevelEditor/LevelEditor/Icon.png
 LevelEditor/LevelEditor/LevelEditor.csproj
+BMFont/*.csproj
+BMFont/bin
+BMFont/obj
+BMFont/Properties
 TileEngine/bin
 TileEngine/Properties
 TileEngine/Icon.png

@@ -18,7 +18,7 @@ namespace TileEngine
 		public static float rotation = 0.0f;
 		public const int MapHeight = 24;
 		public const int MapLayers = 3;
-		private const int skyTile = 2;
+		private const int skyTile = 16;
 		public static double frequency = 0.05f;
 		private static bool positiveRotation = true;
 		public static  int currentGreen = 0;                // Change me to private

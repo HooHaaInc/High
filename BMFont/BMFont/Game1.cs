@@ -10,19 +10,19 @@ using Microsoft.Xna.Framework.Input;
 
 namespace BMFont
 {
-	/// <summary>
+    /// <summary>
     /// This is the main type for your game
     /// </summary>
     public class Game1 : Game
     {
         GraphicsDeviceManager graphics;
-        SpriteBatch spriteBatch;		
+        SpriteBatch spriteBatch;
 
         public Game1()
         {
             graphics = new GraphicsDeviceManager(this);
-            Content.RootDirectory = "Content";	            
-			graphics.IsFullScreen = true;		
+            Content.RootDirectory = "Content";
+            graphics.IsFullScreen = true;
         }
 
         /// <summary>
@@ -35,7 +35,7 @@ namespace BMFont
         {
             // TODO: Add your initialization logic here
             base.Initialize();
-				
+
         }
 
         /// <summary>
@@ -59,9 +59,9 @@ namespace BMFont
         {
             // For Mobile devices, this logic will close the Game when the Back button is pressed
             if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed)
-			{
-				Exit();
-			}
+            {
+                Exit();
+            }
             // TODO: Add your update logic here			
             base.Update(gameTime);
         }
@@ -72,12 +72,11 @@ namespace BMFont
         /// <param name="gameTime">Provides a snapshot of timing values.</param>
         protected override void Draw(GameTime gameTime)
         {
-           	graphics.GraphicsDevice.Clear(Color.CornflowerBlue);
-		
+            graphics.GraphicsDevice.Clear(Color.CornflowerBlue);
+
             //TODO: Add your drawing code here
-            
+
             base.Draw(gameTime);
         }
     }
 }
-
