@@ -20,7 +20,7 @@ namespace Hi
         public bool drugged = false;
         private int score = 0;
         private int livesRemaining = 3;
-        public int inyecciones = 3;
+        public int inyecciones = 5;
         public int drugStatus = 0;
         KeyboardState lastState;
         public bool paused = false;
@@ -222,13 +222,9 @@ namespace Hi
             if (inyecciones > 0)
             {
                 inyecciones--;
-                drugStatus -= 30;
-                if (drugStatus < 0)
-                {
-                    LevelManager.toggleDrugged();
-                    drugged = false;
-                    drugStatus = 0;
-                }
+                LevelManager.toggleDrugged();
+                drugged = false;
+                drugStatus = 0;
             }
         }
         public void Jump()
@@ -248,15 +244,11 @@ namespace Hi
 
         public void Drug()
         {
-            if (drugCount > 0)
+            if (!drugged && drugCount > 0)
             {
-                if (drugStatus == 0) LevelManager.toggleDrugged();
+                LevelManager.toggleDrugged();
                 drugged = true;
                 drugCount--;
-                Random random = new Random();
-                int percentage = 40;
-                drugStatus += percentage;
-                if (drugStatus > 100) Kill();
             }
         }
         public void Revive()
@@ -302,9 +294,12 @@ namespace Hi
         private void checkLevelTransition()
         {
             Vector2 centerCell = TileMap.GetCellByPixel(WorldCenter);
-            if (TileMap.CellCodeValue(centerCell).StartsWith("T_"))
+            if (TileMap.CellCodeValue(centerCell) == ("EXIT"))
             {
-                string[] code = TileMap.CellCodeValue(centerCell).Split('_');
+                livesRemaining = 1;
+                Kill();
+            }
+                /*string[] code = TileMap.CellCodeValue(centerCell).Split('_');
 
                 if (code.Length != 4)
                     return;
@@ -317,8 +312,8 @@ namespace Hi
 
                 LevelManager.RespawnLocation = WorldLocation;
 
-                velocity = Vector2.Zero;
-            }
+                velocity = Vector2.Zero;*/
+            //}
         }
 
         public void setOnGround(bool onGround)

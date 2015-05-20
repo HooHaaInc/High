@@ -13,14 +13,19 @@ namespace Hi {
         private float walkSpeed = 60.0f;
         private bool facingLeft = true;
         public bool Dead = false;
-		private bool killable;
+        private int type;
+
 
 		public bool Killable {
-			get { return killable; }
+			get { return type != 2; }
 		}
 
+        public bool Active {
+            get { return objectState == ObjectStates.Drugged || type == 3; }
+        }
         #region Constructor
         public Enemy(ContentManager content, int cellX, int cellY, int type) {
+            this.type = type;
 			defaultLocation = new Vector2 (TileMap.TileWidth * cellX, TileMap.TileHeight * cellY);
 			switch(type){
 			case 1:
@@ -63,12 +68,11 @@ namespace Hi {
 					cellY * TileMap.TileHeight);
 
 				enabled = true;
-				killable = false;
 
 				codeBasedBlocks = true;
 				PlayAnimation ("run");
 				break;
-			case 3:
+			case 2:
 				animations.Add ("idle",
 				                new AnimationStrip (
 					content.Load<Texture2D> (
@@ -108,8 +112,49 @@ namespace Hi {
 					cellY * TileMap.TileHeight);
 
 				enabled = true;
-				killable = true;
+				codeBasedBlocks = true;
+				PlayAnimation ("run");
+				break;
+            case 3:
+				animations.Add ("idle",
+				                new AnimationStrip (
+					content.Load<Texture2D> (
+					@"Textures\Sprites\MonsterB\Idle"),
+					48,
+					"idle"));
+				animations ["idle"].LoopAnimation = true;
+				animations ["idle"].setSignal (12);
 
+				animations.Add ("run",
+				                new AnimationStrip (
+					content.Load<Texture2D> (
+					@"Textures\Sprites\MonsterB\Run"),
+					48,
+					"run"));
+				animations ["run"].FrameLength = 0.1f;
+				animations ["run"].LoopAnimation = true;
+
+				animations ["run"].setSignal (11);
+
+				animations.Add ("die",
+				                new AnimationStrip (
+					content.Load<Texture2D> (
+					@"Textures\Sprites\MonsterB\Die"),
+					48,
+					"die"));
+				animations ["die"].LoopAnimation = false;
+
+				animations ["die"].setSignal (14);
+
+				frameWidth = 48;
+				frameHeight = 48;
+				CollisionRectangle = new Rectangle (9, 1, 25, 47);
+
+				worldLocation = new Vector2 (
+					cellX * TileMap.TileWidth,
+					cellY * TileMap.TileHeight);
+
+				enabled = true;
 				codeBasedBlocks = true;
 				PlayAnimation ("run");
 				break;
@@ -119,9 +164,10 @@ namespace Hi {
 
         #region Public Methods
         public override void Update(GameTime gameTime) {
+            if (!enabled || !Camera.onCamera(WorldRectangle)) return;
             Vector2 oldLocation = worldLocation;
 
-            if (!Dead && objectState == ObjectStates.Drugged) {
+            if (!Dead && (objectState == ObjectStates.Drugged || type == 3) ) {
                 velocity = new Vector2(0, velocity.Y);
 
                 Vector2 direction = new Vector2(1, 0);
@@ -137,8 +183,38 @@ namespace Hi {
                 velocity += fallSpeed;
             }
 
-            base.Update(gameTime);
-			if (objectState == ObjectStates.Normal) {
+            //base.Update(gameTime);
+
+
+            //if (!enabled || ! Camera.onCamera(collisionRectangle)) return;
+            Vector2 newPosition;
+            if (objectState == ObjectStates.Normal && type!= 3)
+            {
+                newPosition = defaultLocation;
+                newPosition = new Vector2(MathHelper.Clamp(newPosition.X, 0, Camera.WorldRectangle.Width - frameWidth),
+                                          MathHelper.Clamp(newPosition.Y, 2 * (-TileMap.TileHeight), Camera.WorldRectangle.Height - frameHeight));
+                worldLocation = newPosition;
+                if (currentAnimation == "die") enabled = false;
+                currentAnimation = "idle";
+                updateAnimation(gameTime);
+                return;
+            }
+            float elapsed = (float)gameTime.ElapsedGameTime.TotalSeconds;
+            updateAnimation(gameTime);
+            if (velocity.Y != 0) onGround = false;
+
+            Vector2 moveAmount = velocity * elapsed + autoMove;
+
+            moveAmount = horizontalCollisionTest(moveAmount);
+            moveAmount = verticalCollisionTest(moveAmount);
+            newPosition = worldLocation + moveAmount;
+            newPosition = new Vector2(MathHelper.Clamp(newPosition.X, 0, Camera.WorldRectangle.Width - frameWidth),
+            MathHelper.Clamp(newPosition.Y, 2 * (-TileMap.TileHeight), Camera.WorldRectangle.Height - frameHeight));
+            worldLocation = newPosition;
+
+
+
+			if (objectState == ObjectStates.Normal && type !=3) {
 				currentAnimation = "idle";
 				return;
 			} else

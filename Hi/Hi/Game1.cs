@@ -9,7 +9,7 @@ using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using Microsoft.Xna.Framework.Media;
 using TileEngine;
-//using BmFont;
+using BMFont;
 
 namespace Hi
 {
@@ -51,7 +51,8 @@ namespace Hi
         public Game1()
         {
             graphics = new GraphicsDeviceManager(this);
-            Content.RootDirectory = "HiContent";
+            Content.RootDirectory = "Content";
+            //Content.RootDirectory = "HiContent";
         }
 
         /// <summary>
@@ -75,11 +76,11 @@ namespace Hi
         /// </summary>
         protected override void LoadContent()
         {
-			normal = Content.Load<Song> (@"sounds/normal.wav");
-			high = Content.Load<Song> (@"sounds/High.wav");
-			gettingHi = Content.Load<Song> (@"sounds/gettinHi.wav");
-			gettingNormal = Content.Load<Song> (@"sounds/gettingBack.wav");
-			title = Content.Load<Song> (@"sounds/titlescreen.wav");
+			normal = Content.Load<Song>(@"sounds\normal");
+			high = Content.Load<Song> (@"sounds\High");
+			gettingHi = Content.Load<Song> (@"sounds\gettinHi");
+			gettingNormal = Content.Load<Song> (@"sounds\gettingBack");
+			title = Content.Load<Song> (@"sounds\titlescreen");
 
             spriteBatch = new SpriteBatch(GraphicsDevice);
             TileMap.Initialize(Content.Load<Texture2D>(@"Textures\PlatformTiles"));
@@ -395,10 +396,10 @@ namespace Hi
 					myFont.DrawText (spriteBatch, livesPosition, "Vidas: " + player.LivesRemaining.ToString ());
 				}
                 
-                spriteBatch.Draw(Content.Load<Texture2D>(@"Textures\greenTexture"),new Rectangle(600,10,180,20),Color.White);
-                spriteBatch.Draw(Content.Load<Texture2D>(@"Textures\redTexture"),
-                    new Rectangle(600, 10, (int)(player.drugStatus * 1.8), 20),
-                    Color.White);
+               // spriteBatch.Draw(Content.Load<Texture2D>(@"Textures\greenTexture"),new Rectangle(600,10,180,20),Color.White);
+                //spriteBatch.Draw(Content.Load<Texture2D>(@"Textures\redTexture"),
+                   // new Rectangle(600, 10, (int)(player.drugStatus * 1.8), 20),
+                   // Color.White);
                 //spriteBatch.Draw(Content.Load<Texture2D>(@"Textures\redTexture"), 
                  //   new Rectangle(600, 10, (int) (player.drugStatus * 1.8), 20),
                  //   Color.White);
@@ -452,8 +453,8 @@ namespace Hi
                 spriteBatch.Draw(Content.Load<Texture2D>(@"Textures\greenTexture"), new Rectangle(0, 0,
                     this.graphics.PreferredBackBufferWidth,
                     this.graphics.PreferredBackBufferHeight), Color.Black * 0.5f);
-                //spriteBatch.DrawString(pericles8, "PAUSA", new Vector2(370, 140), Color.White);
-				myFont.DrawText (spriteBatch, new Vector2 (370, 140), "PAUSA");
+                if(pericles8 != null) spriteBatch.DrawString(pericles8, "PAUSA", new Vector2(370, 140), Color.White);
+				else myFont.DrawText (spriteBatch, new Vector2 (370, 140), "PAUSA");
             }
             spriteBatch.End();
             base.Draw(gameTime);
