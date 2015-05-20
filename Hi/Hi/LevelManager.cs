@@ -69,8 +69,11 @@ namespace Hi
                 //@"HiContent/Maps/MAP016.MAP"));// +levelNumber.ToString().PadLeft(3, '0') + ".MAP"));
 
             // vv usen esta en XNA
-            TileMap.LoadMap((System.IO.FileStream)TitleContainer.OpenStream(@"HiContent/Maps/MAP017.MAP"));
-
+			try{
+            	TileMap.LoadMap((System.IO.FileStream)TitleContainer.OpenStream(@"Content/Maps/MAP017.MAP"));
+			}catch{
+				TileMap.LoadMap((System.IO.FileStream)TitleContainer.OpenStream(@"HiContent/Maps/MAP017.MAP"));
+				}
             drugs.Clear();
             enemies.Clear();
 			platforms.Clear ();
@@ -88,7 +91,9 @@ namespace Hi
 					    case "DRUG":
 						    drugs.Add (new Drug (Content, x, y));
 						    break;
-						case "ENEMY":
+					    case "ENEMY":
+                            enemies.Add(new Enemy(Content, x, y, 3));
+                            break;
 					    case "CHAIR":
 						    enemies.Add (new Enemy (Content, x, y, 1));
 						    break;
@@ -167,7 +172,7 @@ namespace Hi
                 for (int x = enemies.Count - 1; x >= 0; x--)
                 {
 					enemies[x].Update(gameTime);
-                    if (!enemies[x].Dead && drugged)
+                    if (!enemies[x].Dead && enemies[x].Active)
                     {
                         if (player.CollisionRectangle.Intersects(
                             enemies[x].CollisionRectangle))
@@ -225,7 +230,13 @@ namespace Hi
             foreach (Platform platform in platforms)
                 platform.toggleDrugged();
             foreach (MapSquare mapsquare in passableSquares)
+            {
                 mapsquare.TogglePassable();
+                mapsquare.LayerTiles[1] = ( mapsquare.Passable) ? 12 : 14;
+            }
+
+
+             if(! TileMap.GetMapSquareAtPixel(new Vector2(player.CollisionRectangle.X,player.CollisionRectangle.Y)).Passable) player.Kill();
         }
 
         #endregion

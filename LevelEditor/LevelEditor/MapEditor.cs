@@ -110,6 +110,7 @@ namespace LevelEditor
             cboCodeValues.Items.Add("EnemyBlocking");
             cboCodeValues.Items.Add("Platform");
             cboCodeValues.Items.Add("Start");
+            cboCodeValues.Items.Add("Exit");
             cboCodeValues.Items.Add("Clear");
             cboCodeValues.Items.Add("Custom");
             for (int x = 0; x < tileCount; x++)
@@ -163,6 +164,9 @@ namespace LevelEditor
                     break;
                 case "Start":
                     txtNewCode.Text = "START";
+                    break;
+                case "Exit":
+                    txtNewCode.Text = "EXIT";
                     break;
                 case "Clear":
                     txtNewCode.Text = "";

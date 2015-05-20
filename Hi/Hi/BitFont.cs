@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using Microsoft.Xna.Framework.Content;
 using System.IO;
-using BmFont;
+using BMFont;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 
@@ -21,8 +21,9 @@ namespace Hi
 		{
 			string fontFilePath = Path.Combine (content.RootDirectory, "Fonts/myFont/myFont.fnt");
 			//using (var stream = TitleContainer.OpenStream(fontFilePath)){
-				fontFile = FontLoader.Load (fontFilePath);
-				fontTexture = content.Load <Texture2D> (@"Fonts/myFont/myFont_0.png");
+			fontFile = FontLoader.Load (fontFilePath);
+			fontTexture = content.Load <Texture2D> (@"Fonts\myFont\myFont_0");
+
 			//	stream.Close ();
 			//}
 

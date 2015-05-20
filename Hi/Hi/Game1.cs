@@ -9,7 +9,6 @@ using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using Microsoft.Xna.Framework.Media;
 using TileEngine;
-using BmFont;
 
 namespace Hi
 {
@@ -52,6 +51,7 @@ namespace Hi
         public Game1()
         {
             graphics = new GraphicsDeviceManager(this);
+            //Content.RootDirectory = "Content";
             Content.RootDirectory = "HiContent";
         }
 
@@ -402,11 +402,6 @@ namespace Hi
 					myFont.DrawText (spriteBatch, livesPosition, "Vidas: " + player.LivesRemaining.ToString ());
 					myFont.DrawText (spriteBatch, new Vector2 (750, 10), (1/(float)(gameTime.ElapsedGameTime.TotalSeconds)).ToString ());
 				}
-
-                spriteBatch.Draw(Content.Load<Texture2D>(@"Textures\greenTexture"),new Rectangle(600,10,180,20),Color.White);
-                spriteBatch.Draw(Content.Load<Texture2D>(@"Textures\redTexture"),
-                    new Rectangle(600, 10, (int)(player.drugStatus * 1.8), 20),
-                    Color.White);
                 //spriteBatch.Draw(Content.Load<Texture2D>(@"Textures\redTexture"), 
                  //   new Rectangle(600, 10, (int) (player.drugStatus * 1.8), 20),
                  //   Color.White);*/
@@ -460,8 +455,8 @@ namespace Hi
                 spriteBatch.Draw(Content.Load<Texture2D>(@"Textures\greenTexture"), new Rectangle(0, 0,
                     this.graphics.PreferredBackBufferWidth,
                     this.graphics.PreferredBackBufferHeight), Color.Black * 0.5f);
-                if(pericles8 != null)spriteBatch.DrawString(pericles8, "PAUSA", new Vector2(370, 140), Color.White);
-				myFont.DrawText (spriteBatch, new Vector2 (370, 140), "PAUSA");
+                if(pericles8 != null) spriteBatch.DrawString(pericles8, "PAUSA", new Vector2(370, 140), Color.White);
+				else myFont.DrawText (spriteBatch, new Vector2 (370, 140), "PAUSA");
             }
             spriteBatch.End();
             base.Draw(gameTime);
