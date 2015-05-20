@@ -22,7 +22,7 @@ namespace Hi
 			string fontFilePath = Path.Combine (content.RootDirectory, "Fonts/myFont/myFont.fnt");
 			//using (var stream = TitleContainer.OpenStream(fontFilePath)){
 				fontFile = FontLoader.Load (fontFilePath);
-				fontTexture = content.Load <Texture2D> ("Fonts/myFont/myFont_0.png");
+				fontTexture = content.Load <Texture2D> (@"Fonts/myFont/myFont_0.png");
 			//	stream.Close ();
 			//}
 
@@ -30,7 +30,6 @@ namespace Hi
 				char c = (char)fontCharacter.ID;
 				characterMap.Add (c, fontCharacter);
 			}
-
 		}
 		#endregion
 

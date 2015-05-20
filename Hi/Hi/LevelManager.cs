@@ -88,7 +88,7 @@ namespace Hi
 					    case "DRUG":
 						    drugs.Add (new Drug (Content, x, y));
 						    break;
-					    case "ENEMY":
+						case "ENEMY":
 					    case "CHAIR":
 						    enemies.Add (new Enemy (Content, x, y, 1));
 						    break;
