@@ -8,6 +8,7 @@ using Microsoft.Xna.Framework.GamerServices;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using Microsoft.Xna.Framework.Media;
+using BMFont;
 using TileEngine;
 
 namespace Hi
@@ -22,7 +23,7 @@ namespace Hi
         SpriteBatch spriteBatch;
         Player player;
         SpriteFont pericles8;
-		Song normal,high,gettingHi,gettingNormal,title;
+		Song normal,high,gettingHi,gettingNormal,title,rip;
 		float sec = 0.0f;
 		Boolean entro = true; 
         Vector2 scorePosition = new Vector2(20, 10);
@@ -41,7 +42,7 @@ namespace Hi
         int helpIndex = 0;
         Texture2D titleScreen;
         float deathTimer = 0.0f;
-        float deathDelay = 5.0f;
+        float deathDelay = 2.0f;
 		BitFont myFont;
 		KeyboardState lastState;
         GameState lastGameState;
@@ -82,28 +83,32 @@ namespace Hi
 				gettingHi = Content.Load<Song> (@"sounds/gettinHi.wav");
 				gettingNormal = Content.Load<Song> (@"sounds/gettingBack.wav");
 				title = Content.Load<Song> (@"sounds/titlescreen.wav");
+
+				rip = Content.Load<Song> (@"sounds/dead.wav");
 			}catch{
 				normal = Content.Load<Song> (@"sounds/normal");
 				high = Content.Load<Song> (@"sounds/High");
 				gettingHi = Content.Load<Song> (@"sounds/gettinHi");
 				gettingNormal = Content.Load<Song> (@"sounds/gettingBack");
 				title = Content.Load<Song> (@"sounds/titlescreen");
+				rip = Content.Load<Song> (@"sounds/dead");
 			}
+
 
             spriteBatch = new SpriteBatch(GraphicsDevice);
             TileMap.Initialize(Content.Load<Texture2D>(@"Textures\PlatformTiles"));
 			try{
-	            TileMap.spriteFont = Content.Load<SpriteFont>(@"Fonts\Pericles8");
 	            pericles8 = Content.Load<SpriteFont>(@"Fonts\Pericles8");
 			}catch{
 				myFont = new BitFont (Content);
 			}
+			TileMap.spriteFont = myFont;
             titleScreen = Content.Load<Texture2D>(@"Textures\TitleScreen");
             Camera.WorldRectangle = new Rectangle(0, 0, TileMap.MapWidth * TileMap.TileHeight, TileMap.MapHeight *
             TileMap.TileWidth);
             Camera.Position = Vector2.Zero;
             Camera.ViewPortWidth = 800;
-            Camera.ViewPortHeight = 600;
+            Camera.ViewPortHeight = 500;
             player = new Player(Content);
             LevelManager.Initialize(Content, player);
             /*
@@ -223,6 +228,8 @@ namespace Hi
 				player.Update(gameTime);
 				LevelManager.Update(gameTime, gameState == GameState.Drugged);
                 if (player.Dead){
+						MediaPlayer.Pause ();
+						MediaPlayer.Play (rip);
                     if (player.LivesRemaining > 0){
                         gameState = GameState.PlayerDead;
                         deathTimer = 0.0f;
@@ -279,7 +286,8 @@ namespace Hi
                     player.WorldLocation = Vector2.Zero;
                     LevelManager.ReloadLevel();
                     player.Revive();
-                    gameState = GameState.Drugged;
+					entro = false;
+                    gameState = GameState.Playing;
                 }
             }
             if (gameState == GameState.GameOver){

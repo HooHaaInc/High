@@ -70,10 +70,11 @@ namespace Hi
 
             // vv usen esta en XNA
 			try{
-            	TileMap.LoadMap((System.IO.FileStream)TitleContainer.OpenStream(@"Content/Maps/MAP017.MAP"));
+            	TileMap.LoadMap((System.IO.FileStream)TitleContainer.OpenStream(@"Content/Maps/MAP000.MAP"));
 			}catch{
-				TileMap.LoadMap((System.IO.FileStream)TitleContainer.OpenStream(@"HiContent/Maps/MAP017.MAP"));
-				}
+				TileMap.LoadMap((System.IO.FileStream)TitleContainer.OpenStream(@"HiContent/Maps/MAP000.MAP"));
+
+			}
             drugs.Clear();
             enemies.Clear();
 			platforms.Clear ();
@@ -238,7 +239,6 @@ namespace Hi
 
              if(! TileMap.GetMapSquareAtPixel(new Vector2(player.CollisionRectangle.X,player.CollisionRectangle.Y)).Passable) player.Kill();
         }
-
         #endregion
 
     }

@@ -229,7 +229,7 @@ namespace Hi
         }
         public void Jump()
         {
-            velocity.Y = -400;
+            velocity.Y = -450;
             animations["jump"].signalIndex = 0;
             PlayAnimation("jump");
         }
@@ -259,8 +259,6 @@ namespace Hi
             dead = false;
 			drugged = false;
 			drugCount = 0;
-			inyecciones = 3;
-			drugStatus = 0;
         }
         #endregion
 

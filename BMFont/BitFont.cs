@@ -2,11 +2,10 @@ using System;
 using System.Collections.Generic;
 using Microsoft.Xna.Framework.Content;
 using System.IO;
-using BMFont;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 
-namespace Hi
+namespace BMFont
 {
 	public class BitFont
 	{

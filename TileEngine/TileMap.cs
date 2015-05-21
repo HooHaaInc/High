@@ -6,6 +6,7 @@ using System.Xml.Serialization;
 using System.Runtime.Serialization.Formatters.Binary;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework;
+using BMFont;
 
 namespace TileEngine
 {
@@ -18,14 +19,14 @@ namespace TileEngine
 		public static float rotation = 0.0f;
 		public const int MapHeight = 24;
 		public const int MapLayers = 3;
-		private const int skyTile = 16;
+		public const int skyTile = 16;
 		public static double frequency = 0.05f;
 		private static bool positiveRotation = true;
 		public static  int currentGreen = 0;                // Change me to private
 		public static Color currentColor = Color.White;     // Change me to private
 		static private MapSquare[,] mapCells = new MapSquare[MapWidth, MapHeight];
 		public static bool EditorMode = false;
-		public static SpriteFont spriteFont;
+		public static BitFont spriteFont;
 		static private Texture2D tileSheet;
 		#endregion
 
@@ -132,7 +133,7 @@ namespace TileEngine
 
 		static public void SetMapSquareAtCell(int tileX, int tileY, MapSquare tile){
 			if (tileX >= 0 && tileX < MapWidth && tileY >= 0 && tileY < MapHeight)
-				mapCells [tileX, tileY] = tile;
+				mapCells [tileX, tileY].Copy (tile);
 		}
 
 		static public void SetTileAtCell(
@@ -229,7 +230,7 @@ namespace TileEngine
 			}
 			if(mapCells[x, y].CodeValue != ""){
 				Rectangle screenRect = CellScreenRectangle (x, y);
-				spriteBatch.DrawString (
+				/*spriteBatch.DrawString (
 					spriteFont,
 					mapCells [x, y].CodeValue,
 					new Vector2 (screenRect.X, screenRect.Y),
@@ -238,7 +239,8 @@ namespace TileEngine
 					Vector2.Zero,
 					1.0f,
 					SpriteEffects.None,
-					0.0f);
+					0.0f);*/
+				spriteFont.DrawText (spriteBatch, new Vector2 (screenRect.X, screenRect.Y), mapCells [x, y].CodeValue);
 			}
 		}
 		#endregion

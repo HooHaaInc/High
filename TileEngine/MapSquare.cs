@@ -13,6 +13,16 @@ namespace TileEngine
 		public bool Passable = true;
 		#endregion
 
+		public static MapSquare Neutral{
+			get{ return new MapSquare (
+					TileMap.skyTile,
+					0,
+					0,
+					"",
+					true);
+			}
+		}
+
 		#region Constructor
 		public MapSquare (
 			int background,
@@ -32,6 +42,14 @@ namespace TileEngine
 		#region Public Methods
 		public void TogglePassable(){
 			Passable = !Passable;
+		}
+
+		public void Copy(MapSquare mapSquare){
+			LayerTiles [0] = mapSquare.LayerTiles[0];
+			LayerTiles [1] = mapSquare.LayerTiles[1];
+			LayerTiles [2] = mapSquare.LayerTiles[2];
+			CodeValue = mapSquare.CodeValue;
+			Passable = mapSquare.Passable;
 		}
 		#endregion
 	}
