@@ -23,7 +23,7 @@ namespace Hi
 		#endregion
 
 		#region Constructor
-		public Platform (Texture2D texture, Rectangle rect, Vector2 movement, int limits, int danger = 0)
+		/*public Platform (Texture2D texture, Rectangle rect, Vector2 movement, int limits, int danger = 0)
 		{
 
 			animations.Add ("plat", new AnimationStrip (texture, rect.Width, "plat"));
@@ -33,7 +33,7 @@ namespace Hi
 
 
             drawDepth = 0.875f;
-			collisionRectangle = new Rectangle(0, 0, rect.Width, rect.Height);
+			collisionRectangle = new Rectangle(0, 42, rect.Width, rect.Height-42);
 			velocity = movement;
 			limit = limits;
 			this.danger = danger;
@@ -44,28 +44,28 @@ namespace Hi
 			worldLocation = new Vector2 (TileMap.TileWidth * rect.X, TileMap.TileHeight * rect.Y);
 			defaultLocation = worldLocation;
 		}
-
+        */
 		public Platform(ContentManager content, int x, int y){
 			worldLocation = new Vector2 (TileMap.TileWidth * x, TileMap.TileHeight * y);
 			defaultLocation = worldLocation;
 			animations.Add ("plat", new AnimationStrip (
-				content.Load<Texture2D> (@"Textures\Sprites\ladrilloGris"), 64, "plat"));
+				content.Load<Texture2D> (@"Textures\Sprites\platformSwing"), 64, "plat"));
 			animations ["plat"].LoopAnimation = true;
 			animations ["plat"].FrameLength = 0.15f;
 			animations ["plat"].setSignal (20);
 
 			animations.Add ("table", new AnimationStrip (
-				content.Load <Texture2D> (@"Textures\Sprites\MonsterA\Idle"), 48, "table"));
+				content.Load <Texture2D> (@"Textures\Sprites\platformSwing"), 64, "table"));
 			animations ["table"].LoopAnimation = true;
 			animations ["table"].setSignal (20);
 
 			drawDepth = 0.875f;
-			collisionRectangle = new Rectangle(0, 0, 64, 12);
+			collisionRectangle = new Rectangle(0, 64, 64, 20);
 			velocity = new Vector2(3, 0);
 			limit = 64;
 			this.danger = 0;
 			frameWidth = 64;
-			frameHeight = 12;
+			frameHeight = 64;//era 12
 			PlayAnimation ("plat");
 			enabled = true;
 		}
@@ -132,10 +132,10 @@ namespace Hi
 			Vector2 movement = Vector2.Zero;
 			if (!rekt.Intersects (CollisionRectangle))
 				return moveAmount;
-			if(rekt.X + rekt.Width - worldLocation.X < collisionRectangle.Width){
+			if(rekt.X + rekt.Width - worldLocation.X < CollisionRectangle.Width){
 				movement.X = rekt.X + rekt.Width - worldLocation.X;
 			}else{
-				movement.X = worldLocation.X + collisionRectangle.Width - rekt.X;
+				movement.X = worldLocation.X + CollisionRectangle.Width - rekt.X;
 			}
 
 			//Console.Write (movement);

@@ -20,4 +20,10 @@ Content\Textures\Sprites\Player\Idle.xnb
 Content\Textures\Sprites\Player\Jump.xnb
 Content\Textures\Sprites\Player\Run.xnb
 Content\Textures\TitleScreen.xnb
+Content\rect.xnb
 Content\Textures\PlatformTiles.png
+Content\Fonts\myFont\myFont_0.png
+Content\Fonts\myFont\myFont.fnt
+Content\Fonts\pericles8.xnb
+Content\Fonts\myFont\myFont_0.xnb
+BMFontXmlSerializer.cs

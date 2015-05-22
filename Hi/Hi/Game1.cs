@@ -43,7 +43,7 @@ namespace Hi
         Texture2D titleScreen;
         float deathTimer = 0.0f;
         float deathDelay = 2.0f;
-		BitFont myFont;
+	    BMFont.BitFont myFont;
 		KeyboardState lastState;
         GameState lastGameState;
 		#endregion
@@ -52,8 +52,8 @@ namespace Hi
         public Game1()
         {
             graphics = new GraphicsDeviceManager(this);
-            //Content.RootDirectory = "Content";
-            Content.RootDirectory = "HiContent";
+            Content.RootDirectory = "Content";
+            //Content.RootDirectory = "HiContent";
         }
 
         /// <summary>
@@ -209,7 +209,7 @@ namespace Hi
                     keyState.IsKeyDown(Keys.Right) && lastState.IsKeyUp(Keys.Right) )
                 {
                     helpIndex++;
-                    if (helpIndex == 3) gameState = GameState.TitleScreen;
+                    if (helpIndex == 2) gameState = GameState.TitleScreen;
                    
                 }
                 if (keyState.IsKeyDown(Keys.A) && lastState.IsKeyUp(Keys.A) ||
@@ -372,11 +372,6 @@ namespace Hi
                             spriteBatch.Draw(Content.Load<Texture2D>(@"Textures\HelpMenus\HelpMenu2"), Vector2.Zero, Color.White);
                             break;
                     }
-                    case (2):
-                        {
-                            spriteBatch.Draw(Content.Load<Texture2D>(@"Textures\HelpMenus\HelpMenu3"), Vector2.Zero, Color.White);
-                            break;
-                    }
 
                 }
             }
@@ -455,8 +450,14 @@ namespace Hi
 	                "G A M E O V E R !",
 	                gameOverPosition,
 	                Color.White);
+                     spriteBatch.Draw(Content.Load<Texture2D>(@"Textures\greenTexture"), new Rectangle(0, 0,
+                    this.graphics.PreferredBackBufferWidth,
+                    this.graphics.PreferredBackBufferHeight), Color.Black * (deathTimer/deathDelay));
 				}else{
 					myFont.DrawText (spriteBatch, gameOverPosition, "G A M E O V E R !");
+                    spriteBatch.Draw(Content.Load<Texture2D>(@"Textures\greenTexture"), new Rectangle(0, 0,
+                    this.graphics.PreferredBackBufferWidth,
+                    this.graphics.PreferredBackBufferHeight), Color.Black * (deathTimer / deathDelay));
 				}
             }
             if (gameState == GameState.Paused) {

@@ -32,7 +32,7 @@ namespace Hi {
 				animations.Add ("idle",
 				                new AnimationStrip (
 					content.Load<Texture2D> (
-					@"Textures\Sprites\MonsterA\Idle"),
+					@"Textures\Sprites\MonsterA\Chair"),
 					48,
 					"idle"));
 				animations ["idle"].LoopAnimation = true;
@@ -59,9 +59,9 @@ namespace Hi {
 
 				animations ["die"].setSignal (14);
 
-				frameWidth = 48;
-				frameHeight = 48;
-				CollisionRectangle = new Rectangle (9, 1, 25, 47);
+				frameWidth = 64;
+				frameHeight = 64;
+				CollisionRectangle = new Rectangle (9, 1, 25, 63);
 
 				worldLocation = new Vector2 (
 					cellX * TileMap.TileWidth,
@@ -76,7 +76,7 @@ namespace Hi {
 				animations.Add ("idle",
 				                new AnimationStrip (
 					content.Load<Texture2D> (
-					@"Textures\Sprites\MonsterC\Idle"),
+					@"Textures\Sprites\MonsterC\Pot"),
 					48,
 					"idle"));
 				animations ["idle"].LoopAnimation = true;
@@ -103,9 +103,9 @@ namespace Hi {
 
 				animations ["die"].setSignal (14);
 
-				frameWidth = 48;
-				frameHeight = 48;
-				CollisionRectangle = new Rectangle (9, 1, 25, 47);
+				frameWidth = 64;
+				frameHeight = 64;
+                CollisionRectangle = new Rectangle(9, 1, 24, 63);
 
 				worldLocation = new Vector2 (
 					cellX * TileMap.TileWidth,
@@ -146,9 +146,9 @@ namespace Hi {
 
 				animations ["die"].setSignal (14);
 
-				frameWidth = 48;
-				frameHeight = 48;
-				CollisionRectangle = new Rectangle (9, 1, 25, 47);
+				frameWidth = 64;
+				frameHeight = 64;
+                CollisionRectangle = new Rectangle(9, 1, 24, 63);
 
 				worldLocation = new Vector2 (
 					cellX * TileMap.TileWidth,
